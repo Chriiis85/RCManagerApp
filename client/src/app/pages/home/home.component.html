@@ -1,0 +1,383 @@
+<!-- home.component.html -->
+<div class="relative isolate pt-24 pb-16 lg:pt-32 lg:pb-24 overflow-hidden min-h-[100dvh] flex items-center justify-center bg-slate-50 animate-fade-in-up">
+  <!-- Dynamic Theme Park Background Layer -->
+  <div class="absolute inset-0 z-0">
+    <!-- Unsplash Rollercoaster image with heavy opacity drop and blur to create a dynamic, textural background without overwhelming text -->
+    <img src="https://images.unsplash.com/photo-1513889961551-628c1e5e2ee9?auto=format&fit=crop&q=80&w=2000" alt="Theme park roller coaster" class="w-full h-full object-cover opacity-5 scale-105 blur-[2px]" />
+    <div class="absolute inset-0 bg-gradient-to-b from-slate-50/95 via-white/80 to-slate-50/95"></div>
+  </div>
+
+  <!-- Decorative Orbs -->
+  <div class="absolute inset-x-0 -top-40 z-0 overflow-hidden blur-3xl sm:-top-80 pointer-events-none" aria-hidden="true">
+    <div class="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-sky-200 via-blue-300 to-indigo-400 opacity-40 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"></div>
+  </div>
+
+  <div class="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-2xl text-center animate-fade-in-up">
+      <!-- Badge tag -->
+      <div class="mb-6 flex justify-center">
+        <span (click)="scrollToDescubre()" class="relative rounded-full px-5 py-1.5 text-xs sm:text-sm leading-6 text-slate-600 ring-1 ring-slate-900/10 hover:ring-blue-600/50 transition-all font-semibold shadow-sm flex items-center gap-2 cursor-pointer group bg-white/70 backdrop-blur-sm">
+          <span class="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-blue-400 opacity-75 left-3"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500 mr-1"></span>
+          Control total de tus viajes <a class="font-bold text-blue-600"><span class="absolute inset-0" aria-hidden="true"></span>Saber más <span aria-hidden="true" class="group-hover:translate-x-1 inline-block transition-transform">&rarr;</span></a>
+        </span>
+      </div>
+
+      <!-- Main Headline using "Adrenalina" -->
+      <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-slate-900 mb-6">
+        Tu Pasaporte a la <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-sky-500 to-indigo-500 drop-shadow-sm inline-block transform">Adrenalina</span> Extrema
+      </h1>
+      
+      <!-- Slogan -->
+      <p class="mt-6 text-lg leading-8 text-slate-600 font-medium px-4 max-w-3xl mx-auto">
+        Todo tu universo <i>coaster</i> en un solo lugar. Sube de nivel gestionando tus <strong>credits</strong>, descubre las mejores <strong>atracciones</strong> y <strong>parques temáticos</strong>, compite en el <strong>ranking</strong> mundial y planifica <strong>viajes</strong> inolvidables.
+      </p>
+
+      <!-- CTA Buttons -->
+      <div class="mt-10 flex items-center justify-center gap-x-6">
+        <!--<a routerLink="/viajes" class="group relative rounded-full bg-blue-600 px-7 py-3.5 text-sm font-bold text-white shadow-lg shadow-blue-500/30 hover:bg-blue-500 hover:shadow-blue-500/50 hover:-translate-y-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 transition-all duration-300 overflow-hidden">
+          <span class="relative z-10 flex items-center gap-2">
+            Ver próximos viajes
+            <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+          </span>
+          <div class="absolute inset-0 rounded-full ring-2 ring-white/20 group-hover:ring-white/40 transition-all pointer-events-none"></div>
+        </a>-->
+        <a routerLink="/register" class="text-sm font-bold leading-6 text-slate-900 hover:text-blue-600 transition-colors group flex items-center gap-1 cursor-pointer">
+          Empezar registro 
+          <span class="text-slate-400 group-hover:text-blue-600 group-hover:translate-x-0.5 transition-all">
+            <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clip-rule="evenodd" /></svg>
+          </span>
+        </a>
+      </div>
+    </div>
+    
+    <!-- Info Stats Cards targeted for theme parks -->
+    <div class="mt-16 sm:mt-24 grid grid-cols-1 gap-6 sm:grid-cols-3 mx-auto max-w-5xl">
+      <div class="bg-white/80 backdrop-blur-md rounded-3xl p-8 border border-white/50 shadow-sm hover:shadow-xl hover:shadow-blue-900/5 hover:-translate-y-2 transition-all duration-500 group">
+        <div class="w-12 h-12 rounded-2xl bg-blue-100 flex items-center justify-center text-blue-600 mb-6 group-hover:scale-110 group-hover:rotate-3 transition-transform">
+          <!-- Star/Trophy Icon -->
+        </div>
+        <h3 class="text-slate-900 font-bold text-xl mb-2">Suma Credits</h3>
+        <p class="text-slate-600 text-base leading-relaxed">Clasifica y puntúa las montañas rusas en las que te has montado y compáralas con tus amigos en un ranking interactivo.</p>
+      </div>
+      <div class="bg-white/80 backdrop-blur-md rounded-3xl p-8 border border-white/50 shadow-sm hover:shadow-xl hover:shadow-sky-900/5 hover:-translate-y-2 transition-all duration-500 group">
+        <div class="w-12 h-12 rounded-2xl bg-sky-100 flex items-center justify-center text-sky-600 mb-6 group-hover:scale-110 group-hover:-rotate-3 transition-transform">
+          <!-- Map/Park icon -->
+          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+        <h3 class="text-slate-900 font-bold text-xl mb-2">Explora Parques</h3>
+        <p class="text-slate-600 text-base leading-relaxed">Accede a una extensa base de datos con los mejores parques de atracciones de todo el globo y descubre nuevas joyas.</p>
+      </div>
+      <div class="bg-white/80 backdrop-blur-md rounded-3xl p-8 border border-white/50 shadow-sm hover:shadow-xl hover:shadow-indigo-900/5 hover:-translate-y-2 transition-all duration-500 group">
+        <div class="w-12 h-12 rounded-2xl bg-indigo-100 flex items-center justify-center text-indigo-600 mb-6 group-hover:scale-110 group-hover:-rotate-3 transition-transform">
+          <!-- Calendar/Timer Icon -->
+          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+        <h3 class="text-slate-900 font-bold text-xl mb-2">Cuenta Regresiva</h3>
+        <p class="text-slate-600 text-base leading-relaxed">Organiza tus viajes y observa cómo se acerca el día en un contador en vivo diseñado a medida para tu expedición.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Section: Features (Below Hero) -->
+<section id="descubre" class="py-24 sm:py-32 bg-white relative overflow-hidden">
+  <!-- Subtle Track Graphic Vector Background -->
+  <svg class="absolute top-10 w-[600px] h-[600px] opacity-[0.03] text-slate-900 rotate-12 pointer-events-none -right-40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.5">
+    <path d="M2 20s3-14 8-14 4 11 8 11 4-6 4-6" />
+    <path d="M2 16s3-14 8-14 4 11 8 11 4-6 4-6" />
+  </svg>
+
+  <div class="mx-auto max-w-screen-xl px-6 lg:px-8">
+    <!-- Header -->
+    <div class="mx-auto max-w-2xl lg:text-center mb-24 animate-fade-in-up" style="animation-delay: 0.1s; animation-fill-mode: both;">
+      <h2 class="text-base font-bold leading-7 text-blue-600 tracking-wider uppercase">Ecosistema Completo</h2>
+      <p class="mt-2 text-4xl font-black tracking-tight text-slate-900 sm:text-5xl">Todo lo que necesitas</p>
+      <p class="mt-6 text-lg leading-8 text-slate-600 font-medium">Descubre las herramientas principales que hacen de RCManager el hogar definitivo para los amantes de la adrenalina. Explora, puntúa y viaja como nunca.</p>
+    </div>
+
+    <div class="mx-auto max-w-6xl space-y-24">
+      
+      <!-- Feature 1: Mis Credits -->
+      <a routerLink="/credits" class="relative flex flex-col gap-10 lg:flex-row lg:items-center animate-fade-in-up group cursor-pointer" style="animation-delay: 0.2s; animation-fill-mode: both;">
+        <div class="lg:w-1/2 lg:pr-10">
+          <div class="inline-flex w-12 h-12 rounded-2xl bg-blue-100 text-blue-600 items-center justify-center mb-6 border border-blue-200/50 shadow-sm relative overflow-hidden group-hover:scale-110 transition-transform">
+            <span class="text-2xl">🏆</span>
+          </div>
+          <h3 class="text-3xl font-extrabold text-slate-900 tracking-tight group-hover:text-blue-600 transition-colors">Mis Credits</h3>
+          <p class="mt-4 text-lg text-slate-600 leading-relaxed font-medium">Lleva un registro estricto de cada <strong>credit</strong>. Márcalos como conseguidos, puntúalos del 1 al 10 y guarda para siempre tus reseñas y estadísticas en tu propio diario digital.</p>
+        </div>
+        <div class="lg:w-1/2 relative group-hover:scale-[1.02] transition-transform duration-500">
+          <div class="absolute -inset-1 rounded-3xl bg-blue-100/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"></div>
+          <div class="relative rounded-3xl bg-slate-100 border border-slate-200/60 p-2 shadow-xl shadow-slate-200/50 overflow-hidden">
+            <div class="w-full h-80 rounded-2xl bg-slate-50 flex flex-col gap-3 justify-center p-5 relative overflow-hidden">
+              <div class="absolute -right-10 -top-10 w-40 h-40 bg-blue-100 rounded-full blur-3xl opacity-50"></div>
+              
+              <!-- Mockup Credit 1 -->
+              <div class="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md p-4 flex items-center gap-4 relative z-10 transition-all">
+                <div class="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center text-2xl shadow-inner">🎢</div>
+                <div class="flex-1">
+                  <h4 class="font-extrabold text-slate-900 text-sm">Shambhala</h4>
+                  <p class="text-xs text-slate-500 font-medium">PortAventura World</p>
+                </div>
+                <div class="flex flex-col items-center px-3 py-1.5 bg-blue-50 rounded-xl border border-blue-100">
+                  <span class="text-lg font-black text-blue-600 leading-none">12</span>
+                  <span class="text-[8px] font-black text-blue-400 uppercase tracking-widest mt-0.5">veces</span>
+                </div>
+              </div>
+              
+              <!-- Mockup Credit 2 -->
+              <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 flex items-center gap-4 relative z-10 opacity-80 transform scale-[0.98]">
+                <div class="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center text-2xl shadow-inner">🎢</div>
+                <div class="flex-1">
+                  <h4 class="font-extrabold text-slate-900 text-sm">Red Force</h4>
+                  <p class="text-xs text-slate-500 font-medium">Ferrari Land</p>
+                </div>
+                <div class="flex flex-col items-center px-3 py-1.5 bg-blue-50 rounded-xl border border-blue-100">
+                  <span class="text-lg font-black text-blue-600 leading-none">3</span>
+                  <span class="text-[8px] font-black text-blue-400 uppercase tracking-widest mt-0.5">veces</span>
+                </div>
+              </div>
+
+              <!-- Stats Mockup -->
+              <div class="bg-blue-600 rounded-2xl p-5 flex items-center justify-between text-white mt-2 shadow-lg shadow-blue-500/25 relative z-10">
+                <span class="text-xs font-bold uppercase tracking-widest text-blue-100">Total Credits</span>
+                <span class="text-3xl font-black">15</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </a>
+
+      <!-- Feature 2: Atracciones -->
+      <a routerLink="/atracciones" class="block group cursor-pointer focus:outline-none focus:ring-4 focus:ring-purple-500/20 rounded-[2.5rem]">
+      <div class="relative flex flex-col gap-10 lg:flex-row-reverse lg:items-center animate-fade-in-up" style="animation-delay: 0.3s; animation-fill-mode: both;">
+        <div class="lg:w-1/2 lg:pl-10">
+          <div class="inline-flex w-12 h-12 rounded-2xl bg-purple-100 text-purple-600 items-center justify-center mb-6 border border-purple-200/50 shadow-sm relative overflow-hidden">
+            <span class="text-2xl">🎢</span>
+          </div>
+          <h3 class="text-3xl font-extrabold text-slate-900 tracking-tight">Catálogo de Atracciones</h3>
+          <p class="mt-4 text-lg text-slate-600 leading-relaxed font-medium">Descubre joyas ocultas. Filtra por fabricante, tipo, país o parque. Conoce el estado en tiempo real, el año de estreno y todos los detalles técnicos de cada máquina antes de montarte.</p>
+        </div>
+        <div class="lg:w-1/2 relative group">
+          <div class="absolute -inset-1 rounded-3xl bg-purple-100/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"></div>
+          <div class="relative rounded-3xl bg-slate-100 border border-slate-200/60 p-2 shadow-xl shadow-slate-200/50 overflow-hidden transform transition-transform duration-700 hover:scale-[1.02]">
+            <div class="w-full h-80 rounded-2xl bg-slate-50 flex flex-col p-4 relative overflow-hidden justify-center gap-3">
+              <div class="absolute -left-10 -bottom-10 w-40 h-40 bg-purple-100 rounded-full blur-3xl opacity-50"></div>
+              
+              <div class="w-full rounded-2xl bg-white flex flex-col p-3 shadow-sm border border-slate-200 gap-3 relative z-10">
+                <div class="relative w-full h-32 rounded-xl bg-slate-800 overflow-hidden shadow-sm flex items-center justify-center">
+                  <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent z-10"></div>
+                  <span class="text-5xl opacity-20">🎢</span>
+                  <div class="absolute bottom-3 left-3 z-20">
+                    <h4 class="font-black text-white text-lg leading-tight">Taron</h4>
+                    <p class="text-xs text-slate-200 font-medium flex items-center gap-1">Phantasialand</p>
+                  </div>
+                  <div class="absolute top-3 right-3 z-20 flex flex-col gap-1 items-end">
+                    <span class="bg-emerald-50 text-emerald-700 ring-1 ring-emerald-700/10 px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-wider">Operativa</span>
+                    <span class="bg-purple-600 text-white px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-wider">Montaña Rusa</span>
+                  </div>
+                </div>
+                <div class="grid grid-cols-2 gap-2 mt-1">
+                  <div class="bg-slate-50 rounded-xl p-2 border border-slate-100">
+                    <p class="text-[8px] font-black text-slate-400 uppercase">Fabricante</p>
+                    <p class="text-xs font-bold text-slate-700">Intamin</p>
+                  </div>
+                  <div class="bg-slate-50 rounded-xl p-2 border border-slate-100">
+                    <p class="text-[8px] font-black text-slate-400 uppercase">Estreno</p>
+                    <p class="text-xs font-bold text-slate-700">2016</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      </a>
+
+      <!-- Feature 3: Parques Temáticos -->
+      <a routerLink="/parques" class="block group cursor-pointer focus:outline-none focus:ring-4 focus:ring-emerald-500/20 rounded-[2.5rem]">
+      <div class="relative flex flex-col gap-10 lg:flex-row lg:items-center animate-fade-in-up" style="animation-delay: 0.4s; animation-fill-mode: both;">
+        <div class="lg:w-1/2 lg:pr-10">
+          <div class="inline-flex w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-600 items-center justify-center mb-6 border border-emerald-200/50 shadow-sm relative overflow-hidden">
+            <span class="text-2xl">🏰</span>
+          </div>
+          <h3 class="text-3xl font-extrabold text-slate-900 tracking-tight">Parques Temáticos</h3>
+          <p class="mt-4 text-lg text-slate-600 leading-relaxed">Conéctate a la inmensa red global. Navega a través de perfiles de parques enteros, horarios, afluencia y la lista completa de esas atracciones que no te puedes perder, e incluso explóralos en nuestro mapa mundial.</p>
+        </div>
+        <div class="lg:w-1/2 relative group">
+          <div class="absolute -inset-1 rounded-3xl bg-emerald-100/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"></div>
+          <div class="relative rounded-3xl bg-slate-100 border border-slate-200/60 p-2 shadow-xl shadow-slate-200/50 overflow-hidden transform transition-transform duration-700 hover:scale-[1.02]">
+            <div class="w-full h-80 rounded-2xl bg-slate-50 flex flex-col gap-4 p-5">
+              <!-- Mockup Park Card -->
+              <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 hover:border-emerald-300 transition-colors">
+                <div class="w-full h-32 bg-emerald-100 rounded-xl mb-3 flex items-center justify-center text-emerald-500 text-4xl shadow-inner relative overflow-hidden">
+                  <div class="absolute inset-0 bg-gradient-to-t from-emerald-900/20 to-transparent"></div>
+                  🏰
+                </div>
+                <div class="flex justify-between items-center">
+                  <div>
+                    <h4 class="font-bold text-slate-900 text-lg leading-tight">Europa-Park</h4>
+                    <p class="text-xs font-medium text-slate-500 mt-0.5">Alemania · 64 Atracciones</p>
+                  </div>
+                  <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 font-black text-sm border border-blue-100 shadow-sm">9.9</div>
+                </div>
+              </div>
+              <!-- Mini Skeleton Cards -->
+              <div class="flex gap-4 opacity-50">
+                <div class="flex-1 bg-white rounded-2xl p-3 shadow-sm border border-slate-200 h-20">
+                   <div class="w-full h-6 bg-slate-100 rounded-md mb-2"></div>
+                   <div class="w-1/2 h-4 bg-slate-100 rounded-md"></div>
+                </div>
+                <div class="flex-1 bg-white rounded-2xl p-3 shadow-sm border border-slate-200 h-20">
+                   <div class="w-full h-6 bg-slate-100 rounded-md mb-2"></div>
+                   <div class="w-2/3 h-4 bg-slate-100 rounded-md"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      </a>
+
+      <!-- Feature 4: Ranking -->
+      <a routerLink="/ranking" class="block group cursor-pointer focus:outline-none focus:ring-4 focus:ring-amber-500/20 rounded-[2.5rem]">
+      <div class="relative flex flex-col gap-10 lg:flex-row-reverse lg:items-center animate-fade-in-up" style="animation-delay: 0.5s; animation-fill-mode: both;">
+        <div class="lg:w-1/2 lg:pl-10">
+          <div class="inline-flex w-12 h-12 rounded-2xl bg-amber-100 text-amber-600 items-center justify-center mb-6 border border-amber-200/50 shadow-sm relative overflow-hidden">
+            <span class="text-2xl">🥇</span>
+          </div>
+          <h3 class="text-3xl font-extrabold text-slate-900 tracking-tight">Ranking Global</h3>
+          <p class="mt-4 text-lg text-slate-600 leading-relaxed font-medium">Descubre cuáles son los destinos y experiencias más valorados. Basado en los prestigiosos <i>Golden Ticket Awards</i>, mantente al día con lo mejor de la industria y añade tus próximas metas a tu lista de deseos.</p>
+        </div>
+        <div class="lg:w-1/2 relative group">
+          <div class="absolute -inset-1 rounded-3xl bg-amber-100/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"></div>
+          <div class="relative rounded-3xl bg-slate-100 border border-slate-200/60 p-2 shadow-xl shadow-slate-200/50 overflow-hidden transform transition-transform duration-700 hover:scale-[1.02]">
+            <div class="w-full h-80 rounded-2xl bg-slate-50 flex flex-col p-5 shadow-inner border border-slate-200 justify-center gap-3 relative">
+              <div class="absolute -right-10 top-0 w-32 h-32 bg-amber-100 rounded-full blur-3xl opacity-50"></div>
+              
+              <div class="absolute top-5 right-5 bg-amber-500 text-white px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest shadow-md z-30">BEST CHOICE</div>
+              
+              <!-- #1 Item -->
+              <div class="bg-white rounded-2xl p-3 border border-slate-200 shadow-xl flex items-center gap-4 relative z-20">
+                <div class="flex items-center justify-center h-12 w-12 rounded-xl bg-amber-100 text-amber-600 font-black text-xl shrink-0 ring-2 ring-amber-50">#1</div>
+                <div class="flex-1">
+                  <h4 class="font-black text-slate-900 text-sm">VelociCoaster</h4>
+                  <p class="text-[10px] text-slate-500 font-bold uppercase mt-0.5">Islands of Adventure</p>
+                  <div class="mt-2 flex gap-2">
+                    <span class="bg-slate-50 px-2 py-1 rounded-md text-[9px] font-black text-slate-400 uppercase">Score: <span class="text-slate-800">9.9</span></span>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- #2 Item -->
+              <div class="bg-white/80 rounded-2xl p-3 border border-slate-200 shadow-sm flex items-center gap-4 relative z-10 opacity-90 transform scale-[0.98] -mt-1">
+                <div class="flex items-center justify-center h-10 w-10 rounded-xl bg-slate-100 text-slate-500 font-black text-lg shrink-0">#2</div>
+                <div class="flex-1">
+                  <h4 class="font-black text-slate-900 text-xs">Steel Vengeance</h4>
+                  <p class="text-[8px] text-slate-500 font-bold uppercase mt-0.5">Cedar Point</p>
+                </div>
+              </div>
+
+              <!-- #3 Item -->
+              <div class="bg-white/60 rounded-2xl p-3 border border-slate-200 flex items-center gap-4 relative z-0 opacity-70 transform scale-95 -mt-2">
+                <div class="flex items-center justify-center h-10 w-10 rounded-xl bg-slate-100 text-slate-500 font-black text-lg shrink-0">#3</div>
+                <div class="flex-1">
+                  <h4 class="font-black text-slate-900 text-xs">Iron Gwazi</h4>
+                  <p class="text-[8px] text-slate-500 font-bold uppercase mt-0.5">Busch Gardens Tampa</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      </a>
+
+      <!-- Feature 5: Viajes -->
+      <a routerLink="/viajes" class="block group cursor-pointer focus:outline-none focus:ring-4 focus:ring-rose-500/20 rounded-[2.5rem]">
+      <div class="relative flex flex-col gap-10 lg:flex-row lg:items-center animate-fade-in-up" style="animation-delay: 0.6s; animation-fill-mode: both;">
+        <div class="lg:w-1/2 lg:pr-10">
+          <div class="inline-flex w-12 h-12 rounded-2xl bg-rose-100 text-rose-600 items-center justify-center mb-6 border border-rose-200/50 shadow-sm relative overflow-hidden">
+            <span class="text-2xl">✈️</span>
+          </div>
+          <h3 class="text-3xl font-extrabold text-slate-900 tracking-tight">Viajes y Expediciones</h3>
+          <p class="mt-4 text-lg text-slate-600 leading-relaxed font-medium">Añade futuros viajes a tu calendario e invita a tus amigos. Un contador en vivo te mantendrá la adrenalina a tope hasta que llegue el gran día. Apóyate en <strong class="text-purple-600">ParksIA</strong> para crear rutas mágicas.</p>
+        </div>
+        <div class="lg:w-1/2 relative group">
+          <div class="absolute -inset-1 rounded-3xl bg-rose-100/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"></div>
+          <div class="relative rounded-3xl bg-slate-100 border border-slate-200/60 p-2 shadow-xl shadow-slate-200/50 overflow-hidden transform transition-transform duration-700 hover:scale-[1.02]">
+            <div class="w-full h-80 rounded-2xl bg-slate-50 flex flex-col p-4 shadow-inner border border-slate-200 justify-center">
+              
+              <!-- Mockup Trip -->
+              <div class="relative w-full h-64 rounded-xl bg-slate-800 overflow-hidden shadow-lg border border-slate-700 flex flex-col justify-end">
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-transparent z-10"></div>
+                
+                <div class="absolute top-4 right-4 z-20 flex -space-x-2">
+                  <div class="w-8 h-8 rounded-full border-2 border-slate-800 bg-blue-100 flex items-center justify-center text-[10px] font-bold text-blue-800 z-10">AM</div>
+                  <div class="w-8 h-8 rounded-full border-2 border-slate-800 bg-emerald-500 flex items-center justify-center text-[10px] font-bold text-white z-20">👑</div>
+                </div>
+                
+                <div class="relative z-20 p-5">
+                  <span class="bg-white/20 backdrop-blur-md text-white px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-wider">🌍 Europa</span>
+                  <h4 class="font-black text-white text-2xl leading-tight mt-2 drop-shadow-md">Expedición Nórdica</h4>
+                  <p class="text-sm text-rose-300 font-medium mt-1">📅 Verano 2026</p>
+                  
+                  <div class="mt-4 pt-4 border-t border-white/10 flex justify-between items-end">
+                    <div>
+                      <p class="text-[9px] font-bold text-white/50 uppercase tracking-widest mb-1.5">Cuenta Atrás</p>
+                      <div class="flex gap-3 text-white">
+                        <div class="flex flex-col items-center"><span class="text-2xl font-black leading-none font-mono">42</span><span class="text-[7px] uppercase tracking-wider mt-1 opacity-60">Días</span></div><span class="text-white/20">:</span>
+                        <div class="flex flex-col items-center"><span class="text-2xl font-black leading-none font-mono">14</span><span class="text-[7px] uppercase tracking-wider mt-1 opacity-60">Hrs</span></div><span class="text-white/20">:</span>
+                        <div class="flex flex-col items-center text-rose-400"><span class="text-2xl font-black leading-none font-mono">30</span><span class="text-[7px] uppercase tracking-wider mt-1 opacity-60">Min</span></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      </a>
+      
+      <!-- Feature 6: ParksIA -->
+      <a href="https://parks-ia.vercel.app" target="_blank" class="relative flex flex-col gap-10 lg:flex-row-reverse lg:items-center animate-fade-in-up group cursor-pointer" style="animation-delay: 0.7s; animation-fill-mode: both;">
+        <div class="lg:w-1/2 lg:pl-10">
+          <div class="inline-flex w-12 h-12 rounded-2xl bg-indigo-100 text-indigo-600 items-center justify-center mb-6 border border-indigo-200/50 shadow-sm relative overflow-hidden group-hover:scale-110 transition-transform">
+            <span class="text-2xl">🤖</span>
+          </div>
+          <h3 class="text-3xl font-extrabold text-slate-900 tracking-tight group-hover:text-indigo-600 transition-colors">ParksIA <span class="bg-indigo-600 text-white text-[10px] px-2 py-0.5 rounded-full uppercase tracking-widest align-middle ml-2">Nuevo</span></h3>
+          <p class="mt-4 text-lg text-slate-600 leading-relaxed font-medium">Tu asistente personal inteligente. Hazle cualquier pregunta sobre montañas rusas, pide que te planifique una ruta óptima por un parque, o pregúntale por los tiempos de espera actuales. ParksIA tiene las respuestas.</p>
+        </div>
+        <div class="lg:w-1/2 relative group-hover:scale-[1.02] transition-transform duration-500">
+          <div class="absolute -inset-1 rounded-3xl bg-indigo-400/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"></div>
+          <div class="relative rounded-3xl bg-slate-900 border border-slate-700/60 p-2 shadow-2xl shadow-indigo-900/50 overflow-hidden">
+            <div class="w-full h-80 rounded-2xl bg-slate-800 flex flex-col p-5 relative justify-between border border-slate-700">
+              <div class="absolute -left-10 -bottom-10 w-40 h-40 bg-indigo-500 rounded-full blur-3xl opacity-20"></div>
+              
+              <!-- Chat Bubble User -->
+              <div class="self-end bg-blue-600 text-white rounded-2xl rounded-tr-none px-4 py-2 text-sm shadow-sm z-10 max-w-[80%]">
+                ¿Cuál es la montaña rusa más rápida de Europa y dónde está?
+              </div>
+              
+              <!-- Chat Bubble AI -->
+              <div class="self-start bg-slate-700 text-slate-100 rounded-2xl rounded-tl-none px-4 py-3 text-sm shadow-sm z-10 max-w-[90%] mt-4 border border-slate-600 flex gap-3 shadow-indigo-900/20">
+                <div class="w-6 h-6 rounded-full bg-indigo-500 flex items-center justify-center flex-shrink-0 text-xs">🤖</div>
+                <div>
+                  La montaña rusa más rápida de Europa es <strong class="text-white">Red Force</strong>, situada en <strong class="text-white">Ferrari Land</strong> (PortAventura World), en España. Alcanza una velocidad de <strong class="text-white">180 km/h</strong> en tan solo 5 segundos.
+                </div>
+              </div>
+
+              <!-- Input mock -->
+              <div class="mt-auto bg-slate-900 rounded-xl p-3 border border-slate-700 flex items-center justify-between text-slate-500 text-sm z-10">
+                <span>Pregúntale a ParksIA...</span>
+                <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white">↑</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>

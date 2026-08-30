@@ -1,0 +1,24 @@
+# ==========================================
+# RCManager - Robots.txt
+# ==========================================
+User-agent: *
+Allow: /
+Allow: /credits
+Allow: /atracciones
+Allow: /parques
+Allow: /ranking
+Allow: /legal/*
+Allow: /terminos
+Allow: /privacidad
+Allow: /cookies
+Allow: /aviso-legal
+
+# Rutas privadas de usuarios (requieren autenticación)
+Disallow: /profile
+Disallow: /viajes
+Disallow: /mis-credits
+Disallow: /mis-atracciones
+Disallow: /mis-parques
+
+# Archivo de mapa del sitio oficial
+Sitemap: https://rcmanager.app/sitemap.xml

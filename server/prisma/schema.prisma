@@ -1,0 +1,333 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  schemas  = ["RCManager", "public"]
+}
+
+enum UserRole {
+  USER
+  ADMIN
+
+  @@schema("RCManager")
+}
+
+model User {
+  id                Int                @id @default(autoincrement())
+  username          String             @unique
+  email             String             @unique
+  passwordHash      String
+  role              UserRole           @default(USER)
+  firstName         String?
+  lastName          String?
+  profileImage      String?
+  twoFactorEnabled  Boolean            @default(false)
+  twoFactorType          String?            @default("APP")
+  twoFactorSecret        String?
+  twoFactorEmailCode     String?
+  twoFactorEmailExpires  DateTime?
+  createdAt              DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  coasterCredits    CoasterCredit[]
+  attractionsRidden AttractionRecord[]
+  parksVisited      ParkVisit[]
+  tripsOwned        Trip[]             @relation("TripOwner")
+  tripsJoined       TripCompanion[]    @relation("TripParticipant")
+
+  @@schema("RCManager")
+}
+
+enum ParkStatus {
+  OPEN
+  CLOSED
+  UNDER_CONSTRUCTION
+
+  @@schema("RCManager")
+}
+
+enum CoasterStatus {
+  OPERATING
+  SBNO
+  REMOVED
+  UNDER_CONSTRUCTION
+
+  @@schema("RCManager")
+}
+
+enum AttractionStatus {
+  OPERATING
+  CLOSED
+  REMOVED
+  UNDER_CONSTRUCTION
+
+  @@schema("RCManager")
+}
+
+enum ShowStatus {
+  OPERATIONAL
+  CLOSED
+  REMOVED
+
+  @@schema("RCManager")
+}
+
+enum RestaurantStatus {
+  OPERATIONAL
+  CLOSED
+  REMOVED
+
+  @@schema("RCManager")
+}
+
+enum AttractionType {
+  FLAT_RIDE
+  WATER_RIDE
+  DARK_RIDE
+  SIMULATOR
+  TRANSPORT
+  OTHER
+
+  @@schema("RCManager")
+}
+
+enum ShowType {
+  STUNT
+  MUSICAL
+  PARADE
+  WATER_SHOW
+  KIDS_SHOW
+  OTHER
+
+  @@schema("RCManager")
+}
+
+enum CuisineType {
+  FAST_FOOD
+  BUFFET
+  TABLE_SERVICE
+  CAFE
+  SNACKS
+  OTHER
+
+  @@schema("RCManager")
+}
+
+model Operator {
+  id        Int      @id @default(autoincrement())
+  name      String
+  slug      String   @unique
+  country   String?
+  website   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  imageUrl  String?
+  apiId     Int?
+  parks     Park[]
+
+  @@schema("RCManager")
+}
+
+model Park {
+  id          Int          @id @default(autoincrement())
+  name        String
+  slug        String       @unique
+  country     String
+  city        String?
+  openingYear Int?
+  status      ParkStatus?  @default(OPEN)
+  website     String?
+  operatorId  Int?
+  operator    Operator?    @relation(fields: [operatorId], references: [id])
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  imageUrl    String?
+  apiId       Int?
+  coasters    Coaster[]
+  attractions Attraction[]
+  shows       Show[]
+  restaurants Restaurant[]
+  visitors    ParkVisit[]
+  trips       Trip[]
+
+  @@schema("RCManager")
+}
+
+model Coaster {
+  id           Int            @id @default(autoincrement())
+  name         String
+  slug         String         @unique
+  parkId       Int
+  park         Park           @relation(fields: [parkId], references: [id], onDelete: Cascade)
+  status       CoasterStatus? @default(OPERATING)
+  manufacturer String?
+  model        String?
+  openingYear  Int?
+  height       Float?
+  length       Float?
+  speed        Float?
+  inversions   Int?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  imageUrl     String?
+  apiId        Int?
+  credits      CoasterCredit[]
+
+  @@schema("RCManager")
+}
+
+model Attraction {
+  id           Int               @id @default(autoincrement())
+  name         String
+  slug         String            @unique
+  parkId       Int
+  park         Park              @relation(fields: [parkId], references: [id], onDelete: Cascade)
+  type         AttractionType
+  manufacturer String?
+  openingYear  Int?
+  status       AttractionStatus? @default(OPERATING)
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  imageUrl     String?
+  apiId        Int?
+  records      AttractionRecord[]
+
+  @@schema("RCManager")
+}
+
+model Show {
+  id          Int         @id @default(autoincrement())
+  name        String
+  slug        String      @unique
+  parkId      Int
+  park        Park        @relation(fields: [parkId], references: [id], onDelete: Cascade)
+  type        ShowType
+  location    String?
+  duration    Int?
+  status      ShowStatus? @default(OPERATIONAL)
+  openingYear Int?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  imageUrl    String?
+  apiId       Int?
+
+  @@schema("RCManager")
+}
+
+model Restaurant {
+  id           Int               @id @default(autoincrement())
+  name         String
+  slug         String            @unique
+  parkId       Int
+  park         Park              @relation(fields: [parkId], references: [id], onDelete: Cascade)
+  cuisine      CuisineType
+  location     String?
+  tableService Boolean?          @default(false)
+  status       RestaurantStatus? @default(OPERATIONAL)
+  openingYear  Int?
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  imageUrl     String?
+  apiId        Int?
+
+  @@schema("RCManager")
+}
+
+// ── REGISTRO DE USUARIOS (Credits, Atracciones, Parques) ──────────────
+
+model CoasterCredit {
+  id        Int       @id @default(autoincrement())
+  userId    Int
+  coasterId Int
+  rideDate  DateTime? 
+  rating    Int?      
+  review    String?   
+  createdAt DateTime  @default(now())
+
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  coaster   Coaster   @relation(fields: [coasterId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, coasterId]) 
+  @@schema("RCManager")
+}
+
+model AttractionRecord {
+  id           Int        @id @default(autoincrement())
+  userId       Int
+  attractionId Int
+  rideDate     DateTime?
+  rating       Int?
+  createdAt    DateTime   @default(now())
+
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  attraction   Attraction @relation(fields: [attractionId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, attractionId])
+  @@schema("RCManager")
+}
+
+model ParkVisit {
+  id        Int       @id @default(autoincrement())
+  userId    Int
+  parkId    Int
+  visitDate DateTime?
+  rating    Int?
+  createdAt DateTime  @default(now())
+
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  park      Park      @relation(fields: [parkId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, parkId])
+  @@schema("RCManager")
+}
+
+// ── VIAJES Y EXPEDICIONES ──────────────
+
+model Trip {
+  id          Int              @id @default(autoincrement())
+  userId      Int
+  parkId      Int
+  title       String?
+  description String?
+  targetDate  DateTime
+  endDate     DateTime?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  user        User             @relation("TripOwner", fields: [userId], references: [id], onDelete: Cascade)
+  park        Park             @relation(fields: [parkId], references: [id], onDelete: Cascade)
+  companions  TripCompanion[]
+
+  @@schema("RCManager")
+}
+
+model TripCompanion {
+  id        Int      @id @default(autoincrement())
+  tripId    Int
+  userId    Int
+  status    String   @default("PENDING") // PENDING, ACCEPTED, REJECTED
+  createdAt DateTime @default(now())
+
+  trip      Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  user      User     @relation("TripParticipant", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([tripId, userId])
+  @@schema("RCManager")
+}
+
+// ── AMISTADES (SISTEMA SOCIAL) ──────────────
+
+model Friend {
+  id             BigInt   @id @default(autoincrement())
+  userId         BigInt   @map("user_id")
+  friendId       BigInt   @map("friend_id")
+  status         String   @default("PENDING") // PENDING, ACCEPTED, REJECTED
+  createdAt      DateTime @default(now()) @map("created_at")
+  userUsername   String?  @map("user_username")
+  friendUsername String?  @map("friend_username")
+
+  @@unique([userId, friendId])
+  @@map("friends")
+  @@schema("public")
+}

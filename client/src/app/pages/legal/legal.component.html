@@ -1,0 +1,522 @@
+<main class="min-h-screen bg-slate-50 pt-24 pb-20 px-4 sm:px-6 lg:px-8 animate-fade-in-up print:p-0 print:bg-white">
+  <div class="max-w-5xl mx-auto space-y-8">
+    
+    <!-- Header Banner -->
+    <div class="bg-white p-6 sm:p-10 rounded-[2.5rem] shadow-sm border border-slate-100 relative overflow-hidden print:border-none print:shadow-none print:p-0">
+      <!-- Background decorative glow -->
+      <div class="absolute -right-20 -top-20 w-64 h-64 bg-blue-50/60 rounded-full blur-3xl pointer-events-none print:hidden"></div>
+      <div class="absolute -left-20 -bottom-20 w-64 h-64 bg-indigo-50/60 rounded-full blur-3xl pointer-events-none print:hidden"></div>
+
+      <div class="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+        <div class="space-y-2">
+          <div class="flex items-center gap-2 text-xs font-bold text-blue-600 uppercase tracking-widest print:hidden">
+            <a routerLink="/" class="hover:underline flex items-center gap-1">
+              <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+              Inicio
+            </a>
+            <span>/</span>
+            <span class="text-slate-400">Información Legal</span>
+          </div>
+          <h1 class="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">Centro Legal y Privacidad</h1>
+          <p class="text-sm text-slate-500 font-medium">
+            Transparencia, protección de datos y condiciones de servicio de <strong>RCManager</strong>.
+          </p>
+        </div>
+
+        <div class="flex items-center gap-3 w-full sm:w-auto print:hidden">
+          <button (click)="printDocument()" class="cursor-pointer inline-flex items-center justify-center gap-2 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2.5 text-xs font-bold transition-all active:scale-95 border border-slate-200/80">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+            Imprimir / Guardar PDF
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Document Info -->
+      <div class="mt-6 pt-6 border-t border-slate-100 flex flex-wrap items-center justify-between gap-4 text-xs text-slate-500 font-medium">
+        <div class="flex items-center gap-2">
+          <span class="inline-block w-2 h-2 rounded-full bg-emerald-500"></span>
+          <span>Última actualización: <strong>{{ lastUpdated }}</strong></span>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <svg class="w-4 h-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          <span>Contacto legal: <a [href]="'mailto:' + contactEmail" class="text-blue-600 font-bold hover:underline">{{ contactEmail }}</a></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs (Pills) -->
+    <div class="bg-white p-2 rounded-2xl shadow-sm border border-slate-100 flex flex-wrap gap-2 print:hidden">
+      <button 
+        type="button"
+        (click)="setTab('terminos')"
+        [class]="activeTab() === 'terminos' ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20 font-bold' : 'text-slate-600 hover:bg-slate-50 font-semibold'"
+        class="cursor-pointer flex-1 min-w-[140px] py-3 px-4 rounded-xl text-xs sm:text-sm text-center transition-all">
+        📜 Términos de Servicio
+      </button>
+
+      <button 
+        type="button"
+        (click)="setTab('privacidad')"
+        [class]="activeTab() === 'privacidad' ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20 font-bold' : 'text-slate-600 hover:bg-slate-50 font-semibold'"
+        class="cursor-pointer flex-1 min-w-[140px] py-3 px-4 rounded-xl text-xs sm:text-sm text-center transition-all">
+        🔒 Política de Privacidad
+      </button>
+
+      <button 
+        type="button"
+        (click)="setTab('cookies')"
+        [class]="activeTab() === 'cookies' ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20 font-bold' : 'text-slate-600 hover:bg-slate-50 font-semibold'"
+        class="cursor-pointer flex-1 min-w-[140px] py-3 px-4 rounded-xl text-xs sm:text-sm text-center transition-all">
+        🍪 Política de Cookies
+      </button>
+
+      <button 
+        type="button"
+        (click)="setTab('aviso-legal')"
+        [class]="activeTab() === 'aviso-legal' ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20 font-bold' : 'text-slate-600 hover:bg-slate-50 font-semibold'"
+        class="cursor-pointer flex-1 min-w-[140px] py-3 px-4 rounded-xl text-xs sm:text-sm text-center transition-all">
+        ⚖️ Aviso Legal
+      </button>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <!-- TAB 1: TÉRMINOS Y CONDICIONES DE SERVICIO                              -->
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    @if (activeTab() === 'terminos') {
+      <div class="bg-white p-6 sm:p-12 rounded-[2.5rem] shadow-sm border border-slate-100 space-y-8 animate-fade-in print:p-0 print:border-none print:shadow-none">
+        
+        <div class="border-b border-slate-100 pb-6">
+          <span class="text-xs font-bold text-blue-600 uppercase tracking-widest">Documento Oficial</span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">Términos y Condiciones de Uso</h2>
+          <p class="text-slate-500 text-sm mt-2 leading-relaxed">
+            Por favor, lee atentamente estos Términos de Servicio antes de registrarte o utilizar la plataforma <strong>RCManager</strong> (incluyendo el sitio web, aplicaciones móviles y servicios relacionados).
+          </p>
+        </div>
+
+        <section class="space-y-4 text-slate-700 text-sm sm:text-base leading-relaxed">
+          <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+            <span class="flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 text-blue-700 text-xs font-black">1</span>
+            Aceptación de los Términos
+          </h3>
+          <p>
+            Al acceder, descargar, instalar o utilizar <strong>RCManager</strong>, manifiestas haber leído, comprendido y aceptado quedar vinculado por los presentes Términos de Servicio, así como por nuestra <button (click)="setTab('privacidad')" class="text-blue-600 font-bold hover:underline">Política de Privacidad</button>. Si no estás de acuerdo con alguna de estas condiciones, debes abstenerte de utilizar la plataforma.
+          </p>
+        </section>
+
+        <section class="space-y-4 text-slate-700 text-sm sm:text-base leading-relaxed">
+          <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+            <span class="flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 text-blue-700 text-xs font-black">2</span>
+            Descripción del Servicio
+          </h3>
+          <p>
+            <strong>RCManager</strong> es una plataforma lúdica y comunitaria diseñada para entusiastas de parques temáticos y montañas rusas. El servicio permite a los usuarios:
+          </p>
+          <ul class="list-disc pl-6 space-y-2 text-slate-600">
+            <li>Registrar y contabilizar montañas rusas montadas (comúnmente denominadas <em>"credits"</em>).</li>
+            <li>Consultar catálogos y fichas técnicas de atracciones y parques de todo el mundo.</li>
+            <li>Organizar itinerarios, notas y calendarios de viajes a parques temáticos en grupo o individualmente.</li>
+            <li>Conectar con amigos, comparar estadísticas y consultar rankings de comunidad.</li>
+          </ul>
+        </section>
+
+        <section class="space-y-4 text-slate-700 text-sm sm:text-base leading-relaxed">
+          <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+            <span class="flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 text-blue-700 text-xs font-black">3</span>
+            Registro, Cuentas y Seguridad
+          </h3>
+          <p>
+            Para acceder a funciones personalizadas (guardar credits, viajes, amigos), es necesario crear una cuenta mediante autenticación federada (Google OAuth) o credenciales autorizadas.
+          </p>
+          <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 space-y-2 text-xs sm:text-sm">
+            <p><strong>Requisitos de Cuenta:</strong></p>
+            <ul class="list-disc pl-5 space-y-1 text-slate-600">
+              <li>Debes tener al menos <strong>14 años</strong> (o la edad mínima legal en tu país de residencia) para crear una cuenta.</li>
+              <li>Eres responsable de custodiar la confidencialidad de tu sesión y credenciales.</li>
+              <li>Recomendamos encarecidamente activar la <strong>Verificación en Dos Pasos (2FA)</strong> disponible en los ajustes de perfil.</li>
+              <li>Cualquier actividad realizada bajo tu cuenta será de tu exclusiva responsabilidad. En caso de acceso no autorizado, debes notificarnos de inmediato a <a [href]="'mailto:' + contactEmail" class="text-blue-600 font-bold hover:underline">{{ contactEmail }}</a>.</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="space-y-4 text-slate-700 text-sm sm:text-base leading-relaxed">
+          <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+            <span class="flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 text-blue-700 text-xs font-black">4</span>
+            Conducta y Normas de la Comunidad
+          </h3>
+          <p>Te comprometes a hacer un uso diligente y de buena fe de la plataforma. Queda expresamente prohibido:</p>
+          <ul class="list-disc pl-6 space-y-2 text-slate-600">
+            <li>Publicar nombres de usuario, comentarios o contenido ofensivo, difamatorio, de odio, ilegal o inapropiado.</li>
+            <li>Utilizar bots, scrapers, herramientas de extracción automatizada o provocar sobrecargas maliciosas en la API y servidores de RCManager.</li>
+            <li>Intentar vulnerar, eludir o poner a prueba la seguridad, tokens de acceso o sistemas de autenticación de la plataforma.</li>
+            <li>Suplantar la identidad de otras personas o entidades.</li>
+          </ul>
+        </section>
+
+        <section class="space-y-4 text-slate-700 text-sm sm:text-base leading-relaxed">
+          <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+            <span class="flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 text-blue-700 text-xs font-black">5</span>
+            Propiedad Intelectual y Marcas de Terceros
+          </h3>
+          <p>
+            El software, código fuente, interfaz gráfica, diseño, logotipos y marca propia de <strong>RCManager</strong> son propiedad exclusiva de sus creadores y están protegidos por las leyes de propiedad intelectual.
+          </p>
+          <div class="p-4 bg-amber-50 rounded-2xl border border-amber-200 text-amber-900 text-xs sm:text-sm">
+            <p class="font-bold mb-1">Aviso sobre marcas de Parques y Fabricantes:</p>
+            <p>
+              Todos los nombres de parques temáticos (ej. PortAventura, Disneyland, Cedar Point, Europa-Park), montañas rusas, atracciones y logotipos comerciales mencionados en RCManager son marcas registradas de sus respectivos propietarios y operadores. Su mención en esta aplicación se realiza con fines estrictamente <strong>informativos, identificativos y de uso legítimo nominativo (fair use)</strong>, sin implicar patrocinio, afiliación ni respaldo comercial por parte de dichos operadores.
+            </p>
+          </div>
+        </section>
+
+        <section class="space-y-4 text-slate-700 text-sm sm:text-base leading-relaxed">
+          <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+            <span class="flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 text-blue-700 text-xs font-black">6</span>
+            Exención de Responsabilidad y Datos Informativos
+          </h3>
+          <p>
+            Los datos sobre atracciones (alturas, velocidades, aperturas, estados operativos o restricciones físicas) se recopilan con fines comunitarios e informativos. <strong>RCManager no se hace responsable de:</strong>
+          </p>
+          <ul class="list-disc pl-6 space-y-2 text-slate-600">
+            <li>Diferencias entre las especificaciones mostradas y las normativas reales vigentes en cada parque.</li>
+            <li>Cierres técnicos, averías, condiciones meteorológicas o cambios de horario en las instalaciones de los parques.</li>
+            <li>Decisiones o incidentes derivados de la visita de los usuarios a dichos parques. Se insta siempre a consultar y acatar las instrucciones de seguridad y el personal oficial de cada parque temático.</li>
+          </ul>
+        </section>
+
+        <section class="space-y-4 text-slate-700 text-sm sm:text-base leading-relaxed">
+          <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+            <span class="flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 text-blue-700 text-xs font-black">7</span>
+            Cancelación y Supresión de Cuenta
+          </h3>
+          <p>
+            Puedes dejar de utilizar la plataforma en cualquier momento y solicitar la eliminación completa de tu cuenta y datos asociados desde la sección de ajustes de tu perfil o enviando una solicitud a <a [href]="'mailto:' + contactEmail" class="text-blue-600 font-bold hover:underline">{{ contactEmail }}</a> conforme a lo dispuesto en la Política de Privacidad.
+          </p>
+          <p>
+            RCManager se reserva el derecho de suspender o revocar el acceso a cualquier cuenta que infrinja reiteradamente estos Términos.
+          </p>
+        </section>
+
+        <section class="space-y-4 text-slate-700 text-sm sm:text-base leading-relaxed">
+          <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+            <span class="flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 text-blue-700 text-xs font-black">8</span>
+            Modificaciones de los Términos
+          </h3>
+          <p>
+            Podemos actualizar estos términos periódicamente para reflejar mejoras en la plataforma o exigencias legales. Notificaremos los cambios sustanciales actualizando la fecha en la parte superior de esta página y, cuando proceda, mediante aviso visible en la aplicación.
+          </p>
+        </section>
+
+        <section class="space-y-4 text-slate-700 text-sm sm:text-base leading-relaxed">
+          <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+            <span class="flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 text-blue-700 text-xs font-black">9</span>
+            Legislación Aplicable y Jurisdicción
+          </h3>
+          <p>
+            Estos términos se rigen por la legislación española y la normativa comunitaria europea aplicable. Cualquier controversia se someterá a los juzgados y tribunales competentes conforme a la legislación de consumidores y usuarios.
+          </p>
+        </section>
+
+      </div>
+    }
+
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <!-- TAB 2: POLÍTICA DE PRIVACIDAD (RGPD / GDPR / CCPA)                      -->
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    @if (activeTab() === 'privacidad') {
+      <div class="bg-white p-6 sm:p-12 rounded-[2.5rem] shadow-sm border border-slate-100 space-y-8 animate-fade-in print:p-0 print:border-none print:shadow-none">
+        
+        <div class="border-b border-slate-100 pb-6">
+          <span class="text-xs font-bold text-blue-600 uppercase tracking-widest">Protección de Datos</span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">Política de Privacidad</h2>
+          <p class="text-slate-500 text-sm mt-2 leading-relaxed">
+            En <strong>RCManager</strong> nos tomamos muy en serio la privacidad de tus datos personales. Esta política detalla qué información recopilamos, cómo la tratamos, los proveedores que intervienen y los derechos que te asisten bajo el Reglamento General de Protección de Datos (<strong>RGPD - UE 2016/679</strong>) y la <strong>LOPDGDD 3/2018</strong>.
+          </p>
+        </div>
+
+        <section class="space-y-4 text-slate-700 text-sm sm:text-base leading-relaxed">
+          <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+            <span class="flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 text-blue-700 text-xs font-black">1</span>
+            Responsable del Tratamiento
+          </h3>
+          <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 space-y-2 text-xs sm:text-sm">
+            <p><strong>Identidad:</strong> Equipo de Desarrollo de RCManager</p>
+            <p><strong>Servicio:</strong> Aplicación web y móvil RCManager (Gestión de créditos y parques temáticos)</p>
+            <p><strong>Email de Contacto / Delegado de Protección de Datos:</strong> <a [href]="'mailto:' + contactEmail" class="text-blue-600 font-bold hover:underline">{{ contactEmail }}</a></p>
+          </div>
+        </section>
+
+        <section class="space-y-4 text-slate-700 text-sm sm:text-base leading-relaxed">
+          <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+            <span class="flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 text-blue-700 text-xs font-black">2</span>
+            Datos Personales que Recopilamos
+          </h3>
+          <p>Recopilamos únicamente los datos necesarios para prestar el servicio solicitado:</p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-2">
+              <p class="font-bold text-slate-900 text-xs uppercase tracking-wider">Datos de Identificación y Perfil</p>
+              <ul class="text-xs text-slate-600 space-y-1 list-disc pl-4">
+                <li>Correo electrónico (obtenido vía Google OAuth o registro).</li>
+                <li>Nombre y apellidos (facilitados voluntariamente en perfil).</li>
+                <li>Nombre de usuario público (&#64;username).</li>
+                <li>Avatar / Foto de perfil.</li>
+              </ul>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-2">
+              <p class="font-bold text-slate-900 text-xs uppercase tracking-wider">Datos de Actividad y Uso</p>
+              <ul class="text-xs text-slate-600 space-y-1 list-disc pl-4">
+                <li>Montañas rusas registradas (credits), puntuaciones y fechas.</li>
+                <li>Parques y atracciones visitadas.</li>
+                <li>Listas de amigos y solicitudes de amistad.</li>
+                <li>Planes de viajes organizados.</li>
+              </ul>
+            </div>
+          </div>
+          <p class="text-xs text-slate-500">
+            <strong>Nota de Privacidad:</strong> No recopilamos datos especialmente protegidos (salud, religión, orientación sexual, datos biométricos) ni datos financieros/tarjetas de crédito.
+          </p>
+        </section>
+
+        <section class="space-y-4 text-slate-700 text-sm sm:text-base leading-relaxed">
+          <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+            <span class="flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 text-blue-700 text-xs font-black">3</span>
+            Finalidad y Base Jurídica del Tratamiento
+          </h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs sm:text-sm border border-slate-200 rounded-xl overflow-hidden">
+              <thead class="bg-slate-100 text-slate-800 font-bold">
+                <tr>
+                  <th class="p-3 border-b border-slate-200">Finalidad</th>
+                  <th class="p-3 border-b border-slate-200">Base Jurídica (RGPD)</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                <tr>
+                  <td class="p-3 font-medium">Gestión de la cuenta, login seguro, cálculo de credits y ranking</td>
+                  <td class="p-3 text-slate-600">Ejecución del contrato / prestación del servicio (Art. 6.1.b RGPD)</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-medium">Seguridad de la cuenta (Autenticación en dos pasos 2FA por email/app)</td>
+                  <td class="p-3 text-slate-600">Interés legítimo en proteger la integridad del usuario (Art. 6.1.f RGPD)</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-medium">Atención a solicitudes de soporte y derechos de privacidad</td>
+                  <td class="p-3 text-slate-600">Cumplimiento de obligación legal (Art. 6.1.c RGPD)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="space-y-4 text-slate-700 text-sm sm:text-base leading-relaxed">
+          <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+            <span class="flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 text-blue-700 text-xs font-black">4</span>
+            Proveedores de Servicios y Transferencias de Datos
+          </h3>
+          <p>
+            No vendemos, comercializamos ni transferimos tus datos personales a empresas de publicidad de terceros. Para el funcionamiento de la plataforma utilizamos proveedores tecnológicos de primer nivel sujetos a estrictas cláusulas de confidencialidad y acuerdos DPA (Data Processing Agreements):
+          </p>
+          <ul class="list-disc pl-6 space-y-2 text-slate-600 text-xs sm:text-sm">
+            <li><strong>Supabase / PostgreSQL:</strong> Almacenamiento seguro de base de datos y autenticación federada.</li>
+            <li><strong>Google Identity Services:</strong> Proveedor de autenticación OAuth para inicio de sesión seguro con cuenta de Google.</li>
+            <li><strong>Vercel / Cloud Infrastructure:</strong> Alojamiento web y entrega de contenido (CDN/Serverless) con cifrado SSL/TLS.</li>
+          </ul>
+        </section>
+
+        <section class="space-y-4 text-slate-700 text-sm sm:text-base leading-relaxed">
+          <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+            <span class="flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 text-blue-700 text-xs font-black">5</span>
+            Conservación de los Datos
+          </h3>
+          <p>
+            Tus datos se conservarán mientras mantengas activa tu cuenta en RCManager. En caso de solicitar la eliminación de tu cuenta, los datos serán eliminados permanentemente o anonimizados de forma irreversible en nuestros servidores principales en un plazo máximo de 30 días, salvo obligación legal de bloqueo.
+          </p>
+        </section>
+
+        <section class="space-y-4 text-slate-700 text-sm sm:text-base leading-relaxed">
+          <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+            <span class="flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 text-blue-700 text-xs font-black">6</span>
+            Tus Derechos de Protección de Datos (Derechos ARCO)
+          </h3>
+          <p>Conforme a la normativa europea RGPD, dispones de los siguientes derechos sobre tus datos:</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm">
+            <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+              <strong class="text-slate-900 block">Derecho de Acceso:</strong> Saber qué datos tuyos estamos tratando.
+            </div>
+            <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+              <strong class="text-slate-900 block">Derecho de Rectificación:</strong> Corregir datos inexactos o incompletos desde tu perfil.
+            </div>
+            <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+              <strong class="text-slate-900 block">Derecho de Supresión ("Al Olvido"):</strong> Solicitar el borrado completo de tu cuenta y datos.
+            </div>
+            <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+              <strong class="text-slate-900 block">Derecho a la Portabilidad:</strong> Obtener una copia de tus datos en formato estructurado.
+            </div>
+            <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+              <strong class="text-slate-900 block">Derecho de Oposición y Limitación:</strong> Oponerte al tratamiento en determinadas circunstancias.
+            </div>
+            <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+              <strong class="text-slate-900 block">Derecho a Reclamar:</strong> Presentar una reclamación ante la autoridad de control (en España, la AEPD: <a href="https://www.aepd.es" target="_blank" class="text-blue-600 hover:underline font-bold">www.aepd.es</a>).
+            </div>
+          </div>
+        </section>
+
+        <!-- Elimination & Apple / Google Requirement Box -->
+        <section class="space-y-4 text-slate-700 text-sm sm:text-base leading-relaxed">
+          <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+            <span class="flex items-center justify-center w-6 h-6 rounded-full bg-red-100 text-red-700 text-xs font-black">7</span>
+            Mecanismo de Eliminación de Cuenta y Datos
+          </h3>
+          <div class="p-5 bg-red-50/70 border border-red-200/80 rounded-2xl space-y-3">
+            <p class="text-xs sm:text-sm text-red-950 font-bold">
+              Procedimiento conforme a las directrices de Apple App Store (Guideline 5.1.1(v)) y Google Play Store:
+            </p>
+            <p class="text-xs sm:text-sm text-red-900">
+              Cualquier usuario puede solicitar el borrado permanente e irrevocable de su cuenta de usuario y toda la información vinculada (historial de credits, parques, notas de viajes y conexiones de amistad).
+            </p>
+            <div class="space-y-1 text-xs text-red-800">
+              <p><strong>Para solicitar la baja de tu cuenta:</strong></p>
+              <ol class="list-decimal pl-5 space-y-1">
+                <li>Envía un correo electrónico a <a [href]="'mailto:' + contactEmail + '?subject=Solicitud de Eliminación de Cuenta RCManager'" class="font-bold underline text-red-900">{{ contactEmail }}</a> desde la dirección de email asociada a tu cuenta.</li>
+                <li>Indica en el asunto: <em>"Solicitud de Eliminación de Cuenta RCManager"</em> y tu nombre de usuario.</li>
+                <li>Procederemos a tramitar el borrado irreversible de tus registros en un plazo máximo de 48-72 horas laborales.</li>
+              </ol>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    }
+
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <!-- TAB 3: POLÍTICA DE COOKIES Y ALMACENAMIENTO LOCAL                      -->
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    @if (activeTab() === 'cookies') {
+      <div class="bg-white p-6 sm:p-12 rounded-[2.5rem] shadow-sm border border-slate-100 space-y-8 animate-fade-in print:p-0 print:border-none print:shadow-none">
+        
+        <div class="border-b border-slate-100 pb-6">
+          <span class="text-xs font-bold text-blue-600 uppercase tracking-widest">Tecnologías Web y Almacenamiento</span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">Política de Cookies y Almacenamiento Local</h2>
+          <p class="text-slate-500 text-sm mt-2 leading-relaxed">
+            Información sobre el almacenamiento técnico y las tecnologías utilizadas para mantener tu sesión en <strong>RCManager</strong>.
+          </p>
+        </div>
+
+        <section class="space-y-4 text-slate-700 text-sm sm:text-base leading-relaxed">
+          <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+            <span class="flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 text-blue-700 text-xs font-black">1</span>
+            ¿Qué tecnologías de almacenamiento utiliza RCManager?
+          </h3>
+          <p>
+            <strong>RCManager no utiliza cookies de rastreo publicitario de terceros ni píxeles invasivos.</strong>
+          </p>
+          <p>
+            Nuestra aplicación utiliza almacenamiento web nativo del navegador (<strong>Local Storage</strong> y <strong>Session Storage</strong>) con fines exclusivamente técnicos y operativos necesarios para el funcionamiento de la aplicación.
+          </p>
+        </section>
+
+        <section class="space-y-4 text-slate-700 text-sm sm:text-base leading-relaxed">
+          <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+            <span class="flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 text-blue-700 text-xs font-black">2</span>
+            Detalle del Almacenamiento Técnico
+          </h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs sm:text-sm border border-slate-200 rounded-xl overflow-hidden">
+              <thead class="bg-slate-100 text-slate-800 font-bold">
+                <tr>
+                  <th class="p-3 border-b border-slate-200">Clave / Elemento</th>
+                  <th class="p-3 border-b border-slate-200">Tipo</th>
+                  <th class="p-3 border-b border-slate-200">Finalidad</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                <tr>
+                  <td class="p-3 font-mono font-bold text-blue-700">rcm_token</td>
+                  <td class="p-3 text-slate-600">Local Storage</td>
+                  <td class="p-3 text-slate-600">Almacena de forma segura el token JWT de autenticación para mantener tu sesión activa entre visitas.</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-mono font-bold text-blue-700">rcm_user</td>
+                  <td class="p-3 text-slate-600">Local Storage</td>
+                  <td class="p-3 text-slate-600">Copia local del perfil público básico del usuario (nombre, avatar, rol) para renderizado instantáneo sin demoras.</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-mono font-bold text-blue-700">sb-*-auth-token</td>
+                  <td class="p-3 text-slate-600">Local Storage</td>
+                  <td class="p-3 text-slate-600">Gestión de sesión federada con Supabase / Google OAuth.</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-mono font-bold text-blue-700">rcm_logging_out</td>
+                  <td class="p-3 text-slate-600">Session Storage</td>
+                  <td class="p-3 text-slate-600">Garantiza el cierre seguro y completo de la sesión al pulsar desconectar.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="space-y-4 text-slate-700 text-sm sm:text-base leading-relaxed">
+          <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+            <span class="flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 text-blue-700 text-xs font-black">3</span>
+            Cómo borrar o gestionar estos datos
+          </h3>
+          <p>
+            Dado que se trata de almacenamiento técnico esencial, si borras estos datos desde la configuración de tu navegador, simplemente se cerrará tu sesión activa y deberás volver a iniciar sesión la próxima vez que accedas.
+          </p>
+        </section>
+
+      </div>
+    }
+
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <!-- TAB 4: AVISO LEGAL Y LSSI-CE                                           -->
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    @if (activeTab() === 'aviso-legal') {
+      <div class="bg-white p-6 sm:p-12 rounded-[2.5rem] shadow-sm border border-slate-100 space-y-8 animate-fade-in print:p-0 print:border-none print:shadow-none">
+        
+        <div class="border-b border-slate-100 pb-6">
+          <span class="text-xs font-bold text-blue-600 uppercase tracking-widest">Información Legal</span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">Aviso Legal</h2>
+          <p class="text-slate-500 text-sm mt-2 leading-relaxed">
+            En cumplimiento del artículo 10 de la Ley 34/2002, de 11 de julio, de Servicios de la Sociedad de la Información y de Comercio Electrónico (<strong>LSSI-CE</strong>).
+          </p>
+        </div>
+
+        <section class="space-y-4 text-slate-700 text-sm sm:text-base leading-relaxed">
+          <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+            <span class="flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 text-blue-700 text-xs font-black">1</span>
+            Datos Identificativos del Titular
+          </h3>
+          <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 space-y-2 text-xs sm:text-sm">
+            <p><strong>Denominación del Servicio:</strong> RCManager</p>
+            <p><strong>Actividad:</strong> Plataforma digital y aplicación de seguimiento lúdico de parques temáticos y atracciones</p>
+            <p><strong>Correo electrónico de contacto:</strong> <a [href]="'mailto:' + contactEmail" class="text-blue-600 font-bold hover:underline">{{ contactEmail }}</a></p>
+            <p><strong>Sitio Web Oficial:</strong> <a href="https://rcmanager.app" target="_blank" class="text-blue-600 font-bold hover:underline">rcmanager.app</a></p>
+          </div>
+        </section>
+
+        <section class="space-y-4 text-slate-700 text-sm sm:text-base leading-relaxed">
+          <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+            <span class="flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 text-blue-700 text-xs font-black">2</span>
+            Condiciones de Acceso y Disponibilidad
+          </h3>
+          <p>
+            El acceso a RCManager es de carácter libre y gratuito en sus funciones estándar. Nos esforzamos por mantener una alta disponibilidad del servicio, aunque no podemos garantizar la ausencia total de interrupciones por labores de mantenimiento, actualizaciones o incidencias en las redes de telecomunicaciones.
+          </p>
+        </section>
+
+        <section class="space-y-4 text-slate-700 text-sm sm:text-base leading-relaxed">
+          <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+            <span class="flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 text-blue-700 text-xs font-black">3</span>
+            Enlaces a Plataformas de Terceros
+          </h3>
+          <p>
+            La aplicación puede contener enlaces a herramientas y páginas web de terceros (como parques temáticos oficiales o la herramienta colaborativa ParksIA). RCManager no ejerce control sobre los contenidos o políticas de privacidad de dichos sitios externos.
+          </p>
+        </section>
+
+      </div>
+    }
+
+  </div>
+</main>

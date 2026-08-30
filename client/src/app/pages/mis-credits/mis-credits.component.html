@@ -1,0 +1,283 @@
+<main class="min-h-screen bg-slate-50 pt-24 pb-20 px-6 lg:px-8 animate-fade-in-up">
+  <div class="max-w-5xl mx-auto space-y-8">
+
+    <!-- Header -->
+    <div class="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-slate-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div>
+        <div class="flex items-center gap-3 mb-1">
+          <button (click)="router.navigate(['/profile'])" class="cursor-pointer text-slate-400 hover:text-blue-600 transition-colors">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+            </svg>
+          </button>
+          <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
+            <span>🎢</span> Mis Credits
+          </h1>
+        </div>
+        <p class="text-slate-500 text-sm">Todas las montañas rusas que has montado.</p>
+      </div>
+
+      <div class="w-full sm:w-72 flex flex-col gap-3">
+        <div class="relative group">
+          <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-blue-600 transition-colors">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+          </div>
+          <input
+            type="text"
+            placeholder="Buscar por nombre o parque..."
+            [ngModel]="searchQuery()"
+            (ngModelChange)="searchQuery.set($event)"
+            maxlength="80"
+            class="w-full rounded-2xl border-0 py-3 pl-11 pr-4 ring-1 ring-slate-200 focus:ring-2 focus:ring-blue-600 bg-slate-50 text-sm font-medium text-slate-700 placeholder:text-slate-400 outline-none transition-all"
+          >
+        </div>
+        <label class="flex items-center gap-2 cursor-pointer group self-end pr-2">
+          <div class="relative flex items-center">
+            <input type="checkbox" [checked]="hideRemoved()" (change)="hideRemoved.set(!hideRemoved())" class="peer appearance-none h-4.5 w-4.5 rounded-md border border-slate-200 checked:bg-slate-800 checked:border-slate-800 transition-all cursor-pointer shadow-sm">
+            <svg class="absolute h-3.5 w-3.5 text-white opacity-0 peer-checked:opacity-100 left-0.5 pointer-events-none transition-p-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <span class="text-[10px] font-bold text-slate-500 group-hover:text-slate-900 transition-colors uppercase tracking-wider">Ocultar Eliminadas</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Stats Bar -->
+    <div class="grid grid-cols-2 gap-4">
+      <div class="bg-blue-600 text-white rounded-2xl p-5 flex items-center gap-4">
+        <div class="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center text-2xl">🎢</div>
+        <div>
+          <p class="text-blue-100 text-xs font-bold uppercase tracking-wider">Total Credits</p>
+          <p class="text-3xl font-black">{{ credits().length }}</p>
+        </div>
+      </div>
+      <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm flex items-center gap-4">
+        <div class="w-12 h-12 rounded-xl bg-amber-50 flex items-center justify-center text-2xl">⭐</div>
+        <div>
+          <p class="text-slate-500 text-xs font-bold uppercase tracking-wider">Resultados filtrados</p>
+          <p class="text-3xl font-black text-slate-900">{{ filteredCredits().length }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Content -->
+    @if (isLoading()) {
+      <div class="flex flex-col items-center justify-center py-28 space-y-6 animate-fade-in text-center">
+        <div class="relative">
+          <div class="h-20 w-20 border-6 border-slate-100 border-t-blue-600 rounded-full animate-spin"></div>
+          <div class="absolute inset-0 flex items-center justify-center text-2xl">
+            🎢
+          </div>
+        </div>
+        <div class="space-y-1 max-w-sm mx-auto px-4">
+          <h3 class="text-lg font-bold text-slate-800 tracking-tight">Cargando tus credits</h3>
+          <p class="text-xs text-slate-400 font-medium animate-pulse">Sincronizando tus montañas rusas montadas...</p>
+        </div>
+      </div>
+    } @else if (hasError()) {
+      <div class="text-center py-20 bg-white rounded-3xl border border-dashed border-red-200 p-6 animate-fade-in">
+        <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-red-50 text-red-500 mb-4 border border-red-100 shadow-inner">
+          <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+          </svg>
+        </div>
+        <h3 class="text-xl font-bold text-slate-900 mb-2">No pudimos conectar con tus datos</h3>
+        <p class="text-slate-500 text-sm max-w-md mx-auto mb-6">
+          Ha ocurrido un problema de conexión al consultar tu lista de credits. Tus registros siguen seguros.
+        </p>
+        <button (click)="loadCredits()" class="cursor-pointer inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-blue-600 text-white font-bold text-sm hover:bg-blue-500 transition-all shadow-lg shadow-blue-500/25 active:scale-95">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+          <span>Reintentar conexión</span>
+        </button>
+      </div>
+    } @else if (filteredCredits().length === 0) {
+      <div class="text-center py-24 bg-white rounded-3xl border border-dashed border-slate-200">
+        <div class="text-6xl mb-4">🎢</div>
+        <h3 class="text-xl font-black text-slate-900 mb-2">
+          {{ credits().length === 0 ? 'Sin credits todavía' : 'Sin resultados' }}
+        </h3>
+        <p class="text-slate-500 mb-6">
+          {{ credits().length === 0 ? '¡Empieza a añadir montañas rusas que hayas montado!' : 'Prueba con otra búsqueda.' }}
+        </p>
+        @if (credits().length === 0) {
+          <button (click)="router.navigate(['/credits'])" class="cursor-pointer inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-blue-600 text-white font-bold text-sm hover:bg-blue-500 transition-all shadow-lg shadow-blue-500/25 active:scale-95">
+            Explorar Credits
+          </button>
+        }
+      </div>
+    } @else {
+      <div class="space-y-3">
+        @for (credit of filteredCredits(); track credit.id) {
+          <div class="group bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md hover:border-slate-200 transition-all duration-300 overflow-hidden">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-5 p-4 sm:p-5">
+              
+              <div class="flex items-center gap-4 sm:gap-5 min-w-0">
+                <!-- Icon/Image -->
+                <div class="flex-shrink-0 w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-slate-100 dark:bg-slate-800 overflow-hidden relative shadow-sm">
+                  <img 
+                    [src]="credit.coaster?.imageUrl || 'https://images.unsplash.com/photo-1513889961551-628c1e5e2ee9?auto=format&fit=crop&q=80&w=200&id=' + credit.coasterId" 
+                    (error)="creditImg.src='https://images.unsplash.com/photo-1513889961551-628c1e5e2ee9?auto=format&fit=crop&q=80&w=200'"
+                    #creditImg
+                    loading="lazy"
+                    decoding="async"
+                    class="w-full h-full object-cover">
+                </div>
+
+                <!-- Info -->
+                <div class="flex-1 min-w-0">
+                  <h3 class="font-extrabold text-slate-900 text-base leading-tight mb-0.5 truncate">
+                    {{ credit.coaster?.name || 'Montaña Rusa #' + credit.coasterId }}
+                  </h3>
+                  <p class="text-sm text-slate-500 font-medium flex items-center gap-1 truncate">
+                    <svg class="w-3.5 h-3.5 text-slate-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                    </svg>
+                    {{ credit.coaster?.park?.name || 'Parque desconocido' }}
+                    @if (credit.coaster?.park?.country) {
+                      <span class="text-slate-300">·</span>
+                      <span>{{ credit.coaster?.park?.country }}</span>
+                    }
+                  </p>
+                  @if (credit.rideDate) {
+                    <p class="text-xs text-slate-400 mt-0.5">
+                      Primera vez: {{ credit.rideDate | date:'dd/MM/yyyy' }}
+                    </p>
+                  }
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between sm:justify-end gap-3 pt-3 sm:pt-0 border-t sm:border-0 border-slate-100 mt-2 sm:mt-0">
+                <!-- Ride Count Badge -->
+                <div class="flex-shrink-0 flex flex-col items-center">
+                  <button
+                    (click)="openCountModal(credit)"
+                    class="cursor-pointer flex flex-col items-center gap-0.5 px-4 py-2 rounded-xl bg-blue-50 hover:bg-blue-100 border border-blue-100 transition-all group/count"
+                    title="Editar número de veces montado"
+                  >
+                    <span class="text-2xl font-black text-blue-600 leading-none">{{ credit.rating || 1 }}</span>
+                    <span class="text-[9px] font-black text-blue-400 uppercase tracking-widest">veces</span>
+                  </button>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex-shrink-0 flex items-center gap-2">
+                  <button
+                    (click)="openCountModal(credit)"
+                    class="cursor-pointer w-9 h-9 rounded-xl bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-200 flex items-center justify-center text-slate-400 hover:text-blue-600 transition-all"
+                    title="Editar número de veces"
+                  >
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                    </svg>
+                  </button>
+                  <button
+                    (click)="openDeleteModal(credit)"
+                    class="cursor-pointer w-9 h-9 rounded-xl bg-slate-50 hover:bg-red-50 border border-slate-200 hover:border-red-200 flex items-center justify-center text-slate-400 hover:text-red-500 transition-all"
+                    title="Eliminar de mis credits"
+                  >
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+  </div>
+</main>
+
+<!-- Delete Confirmation Modal -->
+@if (showDeleteModal()) {
+  <div appBlockScroll class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-md animate-fade-in px-4 py-6 overflow-y-auto">
+    <div class="bg-white p-8 rounded-[2.5rem] shadow-2xl max-w-sm w-full text-center border border-slate-100 animate-slide-up relative overflow-hidden my-auto">
+      <div class="absolute top-0 inset-x-0 h-1.5 bg-red-500 rounded-t-[2.5rem]"></div>
+      <button (click)="showDeleteModal.set(false)" class="cursor-pointer absolute top-5 right-5 text-slate-400 hover:text-slate-600 transition-colors">
+        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+      <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-red-50 text-red-500 mb-6 border border-red-100">
+        <svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+        </svg>
+      </div>
+      <h3 class="text-xl font-black text-slate-900 mb-2">¿Eliminar credit?</h3>
+      <p class="text-slate-500 text-sm mb-8">
+        Se eliminará <span class="font-bold text-slate-700">{{ selectedCredit()?.coaster?.name }}</span> de tu lista de credits. Esta acción no se puede deshacer.
+      </p>
+      <div class="flex gap-3">
+        <button (click)="showDeleteModal.set(false)" class="cursor-pointer flex-1 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-700 font-bold text-sm hover:bg-slate-100 transition-all">Cancelar</button>
+        <button (click)="confirmDelete()" [disabled]="isSubmitting()" class="cursor-pointer flex-1 py-3 rounded-2xl bg-red-500 text-white font-bold text-sm hover:bg-red-600 transition-all shadow-lg shadow-red-500/25 active:scale-95 disabled:opacity-60">
+          {{ isSubmitting() ? 'Eliminando...' : 'Eliminar' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Delete Success Modal -->
+@if (showDeleteSuccessModal()) {
+  <div appBlockScroll class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm animate-fade-in px-4 py-6 overflow-y-auto">
+    <div class="bg-white p-8 rounded-3xl shadow-2xl max-w-sm w-full mx-4 text-center border border-slate-100 animate-slide-up relative overflow-hidden my-auto">
+      <button (click)="closeDeleteSuccess()" class="cursor-pointer absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition-colors focus:outline-none">
+        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+      <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-red-100 mb-6 shadow-inner border border-red-50">
+        <svg class="h-8 w-8 text-red-600" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+        </svg>
+      </div>
+      <h3 class="text-xl font-black text-slate-900 mb-2">¡Eliminado Correctamente!</h3>
+      <p class="text-slate-500 font-medium text-sm">
+        <span class="font-extrabold text-slate-800">{{ selectedCredit()?.coaster?.name }}</span>
+        se ha eliminado de tus credits con éxito.
+      </p>
+      <button (click)="closeDeleteSuccess()" class="cursor-pointer mt-6 w-full rounded-2xl bg-red-600 py-3.5 text-sm font-bold text-white hover:bg-red-500 shadow-lg shadow-red-500/20 active:scale-95 transition-all focus:outline-none">Aceptar</button>
+      <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-4">
+        Cerrando en {{ countdown() }}s...
+      </p>
+      <div class="absolute bottom-0 left-0 h-1 bg-red-500 animate-progress-shrink"></div>
+    </div>
+  </div>
+}
+
+<!-- Ride Count Modal -->
+@if (showCountModal()) {
+  <div appBlockScroll class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-md animate-fade-in px-4 py-6 overflow-y-auto">
+    <div class="bg-white p-8 rounded-[2.5rem] shadow-2xl max-w-sm w-full text-center border border-slate-100 animate-slide-up relative overflow-hidden my-auto">
+      <div class="absolute top-0 inset-x-0 h-1.5 bg-blue-600 rounded-t-[2.5rem]"></div>
+      <button (click)="showCountModal.set(false)" class="cursor-pointer absolute top-5 right-5 text-slate-400 hover:text-slate-600 transition-colors">
+        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+      <div class="text-4xl mb-4">🎢</div>
+      <h3 class="text-xl font-black text-slate-900 mb-1">¿Cuántas veces?</h3>
+      <p class="text-slate-500 text-sm mb-6">{{ selectedCredit()?.coaster?.name }}</p>
+
+      <div class="flex items-center justify-center gap-6 mb-8">
+        <button (click)="decrementCount()" [disabled]="rideCount() <= 1" class="cursor-pointer w-14 h-14 rounded-2xl bg-slate-100 hover:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-slate-600 font-black text-2xl transition-all active:scale-95 border border-slate-200">
+          −
+        </button>
+        <div class="flex flex-col items-center">
+          <span class="text-6xl font-black text-blue-600 leading-none">{{ rideCount() }}</span>
+          <span class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-1">veces montado</span>
+        </div>
+        <button (click)="incrementCount()" [disabled]="rideCount() >= 9999" class="cursor-pointer w-14 h-14 rounded-2xl bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-white font-black text-2xl transition-all active:scale-95 shadow-lg shadow-blue-500/25">
+          +
+        </button>
+      </div>
+
+      <div class="flex gap-3">
+        <button (click)="showCountModal.set(false)" class="cursor-pointer flex-1 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-700 font-bold text-sm hover:bg-slate-100 transition-all">Cancelar</button>
+        <button (click)="saveCount()" [disabled]="isSubmitting()" class="cursor-pointer flex-1 py-3 rounded-2xl bg-blue-600 text-white font-bold text-sm hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/25 active:scale-95 disabled:opacity-60">
+          {{ isSubmitting() ? 'Guardando...' : 'Guardar' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

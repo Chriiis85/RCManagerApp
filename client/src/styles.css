@@ -1,0 +1,122 @@
+@import 'tailwindcss';
+
+@variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+
+  --animate-fade-in-up: fade-in-up 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-fade-in-down: fade-in-down 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-progress-shrink: progress-shrink 2s linear forwards;
+  --animate-scale-up: scale-up 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+
+  @keyframes fade-in-up {
+    0% { opacity: 0; transform: translateY(24px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fade-in-down {
+    0% { opacity: 0; transform: translateY(-16px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes progress-shrink {
+    0% { width: 100%; }
+    100% { width: 0%; }
+  }
+
+  @keyframes scale-up {
+    0% { opacity: 0; transform: scale(0.9); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+}
+
+html, body {
+  scroll-behavior: smooth;
+}
+
+html.dark {
+  color-scheme: dark;
+  background-color: #090d16;
+  color: #f8fafc;
+}
+
+body {
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+/* Modo oscuro global coherente para cards, fondos e inputs */
+html.dark .bg-slate-50 {
+  background-color: #090d16;
+}
+
+html.dark .bg-slate-100\/50,
+html.dark .bg-slate-100\/80 {
+  background-color: rgba(30, 41, 59, 0.6);
+}
+
+html.dark .bg-slate-100 {
+  background-color: #1e293b;
+}
+
+html.dark .bg-white {
+  background-color: #111827;
+}
+
+html.dark .bg-white\/90,
+html.dark .bg-white\/95 {
+  background-color: rgba(17, 24, 39, 0.95);
+}
+
+html.dark .bg-white\/70 {
+  background-color: rgba(17, 24, 39, 0.7);
+}
+
+html.dark .text-slate-900,
+html.dark .text-slate-800 {
+  color: #f8fafc;
+}
+
+html.dark .text-slate-700 {
+  color: #cbd5e1;
+}
+
+html.dark .text-slate-600,
+html.dark .text-slate-500 {
+  color: #94a3b8;
+}
+
+html.dark .text-slate-400 {
+  color: #64748b;
+}
+
+html.dark .border-slate-100,
+html.dark .border-slate-200,
+html.dark .border-slate-200\/60,
+html.dark .border-slate-200\/50 {
+  border-color: #1f293d;
+}
+
+html.dark .shadow-sm,
+html.dark .shadow-md,
+html.dark .shadow-xl,
+html.dark .shadow-2xl {
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
+}
+
+html.dark input,
+html.dark select,
+html.dark textarea {
+  background-color: #1a2234;
+  color: #f8fafc;
+  border-color: #2e3c54;
+}
+
+html.dark input::placeholder,
+html.dark textarea::placeholder {
+  color: #64748b;
+}
+
+html.dark .ring-slate-900\/10 {
+  --tw-ring-color: rgba(255, 255, 255, 0.1);
+}

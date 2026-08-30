@@ -1,0 +1,531 @@
+<main class="min-h-screen bg-slate-50 pt-24 pb-20 px-6 lg:px-8 animate-fade-in-up">
+  @if (isLoading()) {
+    <!-- Full Page Loading State -->
+    <div class="flex flex-col items-center justify-center py-40 space-y-10 animate-fade-in text-center">
+      <div class="relative">
+        <div class="h-24 w-24 border-8 border-slate-100 border-t-purple-600 rounded-full animate-spin"></div>
+        <div class="absolute inset-0 flex items-center justify-center">
+          <svg class="h-10 w-10 text-purple-600 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-7.714 2.143L11 21l-2.286-6.857L1 12l7.714-2.143L11 3z" />
+          </svg>
+        </div>
+      </div>
+      <div class="space-y-4 max-w-sm mx-auto px-6">
+        <h3 class="text-2xl font-black text-slate-800 tracking-tight leading-tight">Explorando atracciones</h3>
+        <div class="space-y-2">
+          <p class="text-slate-500 font-bold text-xs uppercase tracking-[0.2em] animate-pulse">Sincronizando el catálogo mundial...</p>
+          <p class="text-[10px] text-slate-400 font-medium leading-relaxed italic">
+            Estamos optimizando los datos para mostrarte las mejores experiencias.
+          </p>
+        </div>
+      </div>
+    </div>
+  } @else {
+    <!-- Header / Filter Grid Structure -->
+    <div class="max-w-7xl mx-auto mb-12">
+      <!-- Header Bar -->
+      <div class="relative flex flex-col lg:flex-row items-center justify-between gap-4 bg-white p-4 sm:px-6 sm:py-4 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100/80 overflow-hidden z-10">
+        <!-- Decoración sutil de fondo -->
+        <div class="absolute -right-20 -top-20 w-64 h-64 bg-purple-50/50 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -left-20 -bottom-20 w-64 h-64 bg-blue-50/50 rounded-full blur-3xl pointer-events-none"></div>
+        
+        <div class="flex items-baseline gap-3 relative z-10 w-full lg:w-auto overflow-hidden">
+          <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight shrink-0">Atracciones</h1>
+          <p class="text-slate-500 font-medium text-sm truncate">Descubre experiencias únicas más allá de las montañas rusas.</p>
+        </div>
+
+        <div class="flex flex-row gap-3 w-full lg:max-w-[32rem] relative z-10">
+          <!-- Search Input -->
+          <div class="relative flex-1 group">
+            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 transition-colors duration-300 group-focus-within:text-purple-600">
+              <svg class="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </div>
+            <input 
+              type="text" 
+              [ngModel]="searchQuery()"
+              (ngModelChange)="updateSearch($event)"
+              placeholder="Nombre de atracción o parque..." 
+              maxlength="80"
+              class="block w-full rounded-[1.25rem] border-0 py-2.5 sm:py-3 pl-10 sm:pl-12 pr-4 text-slate-700 shadow-sm ring-1 ring-inset ring-slate-200/80 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-purple-600 focus:shadow-[0_8px_30px_rgb(147,51,234,0.15)] bg-slate-50/50 hover:bg-slate-50 focus:bg-white transition-all duration-300 text-sm font-bold outline-none"
+            >
+          </div>
+
+          <!-- Filter Toggle -->
+          <button 
+            (click)="showFilters.set(!showFilters())"
+            [ngClass]="{
+              'bg-slate-900 text-white shadow-xl shadow-slate-900/20 border-slate-900': showFilters(), 
+              'bg-white text-slate-700 border-slate-200 shadow-sm hover:shadow-md hover:border-slate-300 hover:bg-slate-50': !showFilters()
+            }"
+            class="filter-toggle-btn relative flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-[1.25rem] border transition-all duration-300 font-extrabold text-[11px] uppercase tracking-widest hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] whitespace-nowrap"
+          >
+            <svg class="h-4 w-4 sm:h-5 sm:w-5 transition-transform duration-300" [ngClass]="{'rotate-180 text-purple-400': showFilters(), 'text-slate-400': !showFilters()}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+            </svg>
+            <span class="hidden sm:inline">Filtros</span>
+            @if (selectedCountries().length + selectedTypes().length + selectedManufacturers().length + selectedParks().length > 0) {
+              <span 
+                class="flex h-5 min-w-[20px] px-1.5 items-center justify-center rounded-full text-[10px] font-black transition-colors"
+                [ngClass]="{
+                  'bg-white text-slate-900': showFilters(),
+                  'bg-purple-600 text-white shadow-md shadow-purple-600/20': !showFilters()
+                }"
+              >
+                {{ selectedCountries().length + selectedTypes().length + selectedManufacturers().length + selectedParks().length }}
+              </span>
+            }
+          </button>
+
+          <!-- Mobile Grid Toggle -->
+          <div class="flex sm:hidden items-center bg-slate-100/80 rounded-[1.25rem] p-1 border border-slate-200 shrink-0">
+            <button 
+              (click)="mobileGridMode.set('large')"
+              [ngClass]="mobileGridMode() === 'large' ? 'bg-white shadow-sm text-slate-900' : 'text-slate-400 hover:text-slate-600'"
+              class="cursor-pointer p-2 rounded-xl transition-all"
+            >
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <rect x="4" y="4" width="16" height="16" rx="3" stroke-width="2.5"/>
+              </svg>
+            </button>
+            <button 
+              (click)="mobileGridMode.set('compact')"
+              [ngClass]="mobileGridMode() === 'compact' ? 'bg-white shadow-sm text-slate-900' : 'text-slate-400 hover:text-slate-600'"
+              class="cursor-pointer p-2 rounded-xl transition-all"
+            >
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <rect x="3" y="3" width="7" height="7" rx="2" stroke-width="2.5"/>
+                <rect x="14" y="3" width="7" height="7" rx="2" stroke-width="2.5"/>
+                <rect x="3" y="14" width="7" height="7" rx="2" stroke-width="2.5"/>
+                <rect x="14" y="14" width="7" height="7" rx="2" stroke-width="2.5"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filter Panel Grid (Matches width exactly) -->
+      <div class="grid grid-cols-1 md:grid-cols-[1fr,minmax(auto,42rem)] mt-6 px-7">
+        <div class="hidden md:block"></div> <!-- Spacer -->
+        
+        @if (showFilters()) {
+          <div class="filter-panel w-full bg-white/80 backdrop-blur-xl rounded-[2.5rem] border border-white/40 shadow-[0_25px_60px_rgba(0,0,0,0.06)] p-8 animate-in fade-in zoom-in-95 duration-300 relative z-30 overflow-hidden">
+            <!-- Decoration Gradients -->
+            <div class="absolute -top-24 -right-24 w-48 h-48 bg-blue-500/5 blur-[80px] rounded-full"></div>
+            <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-purple-500/5 blur-[80px] rounded-full"></div>
+            
+            <!-- Hide Removed Toggle -->
+            <div class="mb-6 flex justify-end relative z-10">
+              <label class="flex items-center gap-2 cursor-pointer group">
+                <div class="relative flex items-center">
+                  <input type="checkbox" [checked]="hideRemoved()" (change)="hideRemoved.set(!hideRemoved())" class="peer appearance-none h-4.5 w-4.5 rounded-md border border-slate-200 checked:bg-slate-800 checked:border-slate-800 transition-all cursor-pointer shadow-sm">
+                  <svg class="absolute h-3.5 w-3.5 text-white opacity-0 peer-checked:opacity-100 left-0.5 pointer-events-none transition-p-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <span class="text-[10px] font-bold text-slate-500 group-hover:text-slate-900 transition-colors uppercase tracking-wider">Ocultar Eliminadas</span>
+              </label>
+            </div>
+
+            <div class="relative grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-8">
+              <!-- Países -->
+              <div class="space-y-4 flex flex-col h-full">
+                <h4 class="text-[10px] font-extrabold uppercase tracking-[0.15em] text-slate-500 border-l-3 border-blue-500 pl-3">Países</h4>
+                <div class="flex flex-col gap-2.5 max-h-32 overflow-y-auto pr-2 custom-scrollbar mb-4">
+                  @for (item of countries(); track item) {
+                    <label class="flex items-center gap-3 cursor-pointer group py-0.5">
+                      <div class="relative flex items-center">
+                        <input 
+                          type="checkbox" 
+                          [checked]="selectedCountries().includes(item)"
+                          (change)="toggleCountry(item)"
+                          class="peer appearance-none h-4.5 w-4.5 rounded-md border border-slate-200 checked:bg-blue-600 checked:border-blue-600 transition-all cursor-pointer shadow-sm"
+                        >
+                        <svg class="absolute h-3.5 w-3.5 text-white opacity-0 peer-checked:opacity-100 left-0.5 pointer-events-none transition-p-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                      <span class="text-sm font-semibold text-slate-700 group-hover:text-slate-900 transition-colors">{{ item }}</span>
+                    </label>
+                  }
+                </div>
+
+                <!-- Filter Footer Buttons -->
+                <div class="mt-auto pt-4 border-t border-slate-50 flex gap-2">
+                  <button 
+                    (click)="clearAllFilters()"
+                    class="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl border border-red-50 text-red-500 bg-red-50/30 hover:bg-red-50 transition-all text-[8px] font-black uppercase tracking-widest"
+                  >
+                    Limpiar
+                  </button>
+                  <button 
+                    (click)="showFilters.set(false)"
+                    class="flex-1 px-3 py-2.5 rounded-xl bg-slate-900 text-white hover:bg-slate-800 transition-all text-[8px] font-black uppercase tracking-widest shadow-lg shadow-slate-900/10"
+                  >
+                    Cerrar
+                  </button>
+                </div>
+              </div>
+
+              <!-- Tipos -->
+              <div class="space-y-4">
+                <h4 class="text-[10px] font-extrabold uppercase tracking-[0.15em] text-slate-500 border-l-3 border-purple-500 pl-3">Tipos</h4>
+                <div class="flex flex-col gap-2.5 max-h-32 overflow-y-auto pr-2 custom-scrollbar">
+                  @for (item of types(); track item) {
+                    <label class="flex items-center gap-3 cursor-pointer group py-0.5">
+                      <div class="relative flex items-center">
+                        <input 
+                          type="checkbox" 
+                          [checked]="selectedTypes().includes(item)"
+                          (change)="toggleType(item)"
+                          class="peer appearance-none h-4.5 w-4.5 rounded-md border border-slate-200 checked:bg-purple-600 checked:border-purple-600 transition-all cursor-pointer shadow-sm"
+                        >
+                        <svg class="absolute h-3.5 w-3.5 text-white opacity-0 peer-checked:opacity-100 left-0.5 pointer-events-none transition-p-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                      <span class="text-sm font-semibold text-slate-700 group-hover:text-slate-900 transition-colors truncate max-w-[120px]">{{ item }}</span>
+                    </label>
+                  }
+                </div>
+              </div>
+
+              <!-- Fabricantes -->
+              <div class="space-y-4">
+                <h4 class="text-[10px] font-extrabold uppercase tracking-[0.15em] text-slate-500 border-l-3 border-emerald-500 pl-3">Fabricantes</h4>
+                <div class="flex flex-col gap-2.5 max-h-32 overflow-y-auto pr-2 custom-scrollbar">
+                  @for (item of manufacturers(); track item) {
+                    <label class="flex items-center gap-3 cursor-pointer group py-0.5">
+                      <div class="relative flex items-center">
+                        <input 
+                          type="checkbox" 
+                          [checked]="selectedManufacturers().includes(item)"
+                          (change)="toggleManufacturer(item)"
+                          class="peer appearance-none h-4.5 w-4.5 rounded-md border border-slate-200 checked:bg-emerald-600 checked:border-emerald-600 transition-all cursor-pointer shadow-sm"
+                        >
+                        <svg class="absolute h-3.5 w-3.5 text-white opacity-0 peer-checked:opacity-100 left-0.5 pointer-events-none transition-p-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                      <span class="text-sm font-semibold text-slate-700 group-hover:text-slate-900 transition-colors truncate max-w-[120px]">{{ item }}</span>
+                    </label>
+                  }
+                </div>
+              </div>
+
+              <!-- Parques -->
+              <div class="space-y-4">
+                <h4 class="text-[10px] font-extrabold uppercase tracking-[0.15em] text-slate-500 border-l-3 border-amber-500 pl-3">Parques</h4>
+                <div class="flex flex-col gap-2.5 max-h-32 overflow-y-auto pr-2 custom-scrollbar">
+                  @for (item of parks(); track item) {
+                    <label class="flex items-center gap-3 cursor-pointer group py-0.5">
+                      <div class="relative flex items-center">
+                        <input 
+                          type="checkbox" 
+                          [checked]="selectedParks().includes(item)"
+                          (change)="togglePark(item)"
+                          class="peer appearance-none h-4.5 w-4.5 rounded-md border border-slate-200 checked:bg-amber-600 checked:border-amber-600 transition-all cursor-pointer shadow-sm"
+                        >
+                        <svg class="absolute h-3.5 w-3.5 text-white opacity-0 peer-checked:opacity-100 left-0.5 pointer-events-none transition-p-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                      <span class="text-sm font-semibold text-slate-700 group-hover:text-slate-900 transition-colors truncate max-w-[120px]">{{ item }}</span>
+                    </label>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="max-w-7xl mx-auto min-h-[50vh]">
+      @if (filteredAttractions().length > 0) {
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 sm:gap-8"
+             [ngClass]="mobileGridMode() === 'compact' ? 'grid-cols-2 gap-3' : 'grid-cols-1 gap-8'">
+          @for (item of visibleAttractions(); track item.id) {
+            <div class="group bg-white overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-500 border border-slate-100 flex flex-col"
+                 [ngClass]="mobileGridMode() === 'compact' ? 'rounded-2xl' : 'rounded-3xl'">
+              <!-- Image Container -->
+              <div class="relative overflow-hidden bg-slate-100 dark:bg-slate-800" [ngClass]="mobileGridMode() === 'compact' ? 'aspect-square sm:aspect-[4/3]' : 'aspect-[4/3]'">
+                <img 
+                  [src]="item.image" 
+                  [alt]="item.name"
+                  loading="lazy"
+                  decoding="async"
+                  (error)="attrImg.src='https://images.unsplash.com/photo-1513889961551-628c1e5e2ee9?auto=format&fit=crop&q=80&w=800'"
+                  #attrImg
+                  class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                >
+                <div class="absolute right-2 top-2 sm:top-4 sm:right-4 flex flex-col gap-1 sm:gap-2 items-end">
+                  <span class="inline-flex items-center rounded-full bg-white/95 backdrop-blur-md font-black uppercase tracking-wider shadow-sm ring-1 ring-inset {{ mobileGridMode() === 'compact' ? 'px-1.5 py-0.5 text-[7px] sm:px-3 sm:py-1 sm:text-[10px]' : 'px-3 py-1 text-[10px]' }}"
+                    [ngClass]="{
+                      'text-emerald-700 ring-emerald-700/10 bg-emerald-50': item.status === 'Operativa',
+                      'text-red-700 ring-red-700/10 bg-red-50': item.status === 'Cerrada Temporalmente' || item.status === 'Eliminada',
+                      'text-amber-700 ring-amber-700/10 bg-amber-50': item.status === 'En Construcción'
+                    }">
+                    {{ item.status }}
+                  </span>
+                  <span class="inline-flex items-center rounded-full bg-blue-600 font-black uppercase tracking-wider text-white shadow-sm hover:bg-blue-700 transition-colors"
+                        [ngClass]="mobileGridMode() === 'compact' ? 'px-1.5 py-0.5 text-[7px] sm:px-3 sm:py-1 sm:text-[10px]' : 'px-3 py-1 text-[10px]'">
+                    {{ item.type }}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Content -->
+              <div class="flex-1 flex flex-col" [ngClass]="mobileGridMode() === 'compact' ? 'p-3 sm:p-6' : 'p-6'">
+                <div class="mb-2 sm:mb-4">
+                  <h3 class="font-bold text-slate-900 group-hover:text-blue-600 transition-colors line-clamp-1 truncate" 
+                      [title]="item.name"
+                      [ngClass]="mobileGridMode() === 'compact' ? 'text-sm sm:text-lg' : 'text-lg'">{{ item.name }}</h3>
+                  <div class="flex flex-col gap-0.5 mt-1">
+                    <p class="text-slate-500 font-bold flex items-center gap-1"
+                       [ngClass]="mobileGridMode() === 'compact' ? 'text-[9px] sm:text-[11px]' : 'text-[11px]'">
+                      <svg class="h-3 w-3 text-slate-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                      </svg>
+                      <span class="truncate">{{ item.park }}</span>
+                    </p>
+                    <p class="text-slate-500 font-medium px-4"
+                       [ngClass]="mobileGridMode() === 'compact' ? 'text-[8px] sm:text-[10px]' : 'text-[10px]'">{{ item.country }}</p>
+                  </div>
+                </div>
+
+                <p class="text-slate-600 mb-4 sm:mb-6 line-clamp-2 italic"
+                   [ngClass]="mobileGridMode() === 'compact' ? 'hidden sm:block text-[11px] sm:text-xs' : 'text-xs'">
+                  {{ item.description }}
+                </p>
+
+                <!-- Stats Grid -->
+                <div class="grid grid-cols-2 border-y border-slate-50 mb-auto"
+                     [ngClass]="mobileGridMode() === 'compact' ? 'gap-1 py-2 sm:gap-4 sm:py-4 hidden sm:grid' : 'gap-4 py-4'">
+                  <div>
+                    <p class="uppercase tracking-wider text-slate-500 font-black mb-1"
+                       [ngClass]="mobileGridMode() === 'compact' ? 'text-[7px] sm:text-[9px]' : 'text-[9px]'">Fabricante</p>
+                    <p class="font-extrabold text-slate-700 line-clamp-1"
+                       [ngClass]="mobileGridMode() === 'compact' ? 'text-[9px] sm:text-[11px]' : 'text-[11px]'">{{ item.manufacturer }}</p>
+                  </div>
+                  <div class="border-l border-slate-50 pl-2 sm:pl-4">
+                    <p class="uppercase tracking-wider text-slate-500 font-black mb-1"
+                       [ngClass]="mobileGridMode() === 'compact' ? 'text-[7px] sm:text-[9px]' : 'text-[9px]'">Estreno</p>
+                    <p class="font-extrabold text-slate-700"
+                       [ngClass]="mobileGridMode() === 'compact' ? 'text-[9px] sm:text-[11px]' : 'text-[11px]'">{{ item.openingYear === 0 ? 'Desconocido' : item.openingYear }}</p>
+                  </div>
+                </div>
+
+                <!-- Action -->
+                <div [ngClass]="mobileGridMode() === 'compact' ? 'mt-2 sm:mt-6' : 'mt-6'">
+                  <button 
+                    (click)="handleAction(item)"
+                    class="cursor-pointer w-full flex items-center justify-center gap-1 sm:gap-2 font-black uppercase tracking-widest transition-all shadow-lg active:scale-95 group/btn {{ userAttractions().has(item.id) ? 'bg-emerald-500 hover:bg-red-500 text-white' : 'bg-slate-900 hover:bg-slate-800 text-white' }} {{ mobileGridMode() === 'compact' ? 'py-1.5 sm:py-3 rounded-lg sm:rounded-2xl' : 'py-3 rounded-2xl' }}"
+                  >
+                    @if (userAttractions().has(item.id)) {
+                      <svg class="group-hover/btn:hidden shrink-0" [ngClass]="mobileGridMode() === 'compact' ? 'h-3.5 w-3.5 sm:h-4 sm:w-4' : 'h-4 w-4'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                      </svg>
+                      <svg class="hidden group-hover/btn:block shrink-0" [ngClass]="mobileGridMode() === 'compact' ? 'h-3.5 w-3.5 sm:h-4 sm:w-4' : 'h-4 w-4'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+                      </svg>
+                      <span class="group-hover/btn:hidden" [ngClass]="mobileGridMode() === 'compact' ? 'text-[8px] sm:text-[11px]' : 'text-[11px]'">Visitada</span>
+                      <span class="hidden group-hover/btn:block" [ngClass]="mobileGridMode() === 'compact' ? 'text-[8px] sm:text-[11px]' : 'text-[11px]'">Eliminar registro</span>
+                    } @else {
+                      <svg class="transition-transform group-hover/btn:rotate-90 shrink-0" [ngClass]="mobileGridMode() === 'compact' ? 'h-3.5 w-3.5 sm:h-4 sm:w-4' : 'h-4 w-4'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" />
+                      </svg>
+                      <span [ngClass]="mobileGridMode() === 'compact' ? 'text-[8px] sm:text-[11px]' : 'text-[11px]'">Registrar Visita</span>
+                    }
+                  </button>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+
+        @if (filteredAttractions().length > visibleCount()) {
+          <div class="mt-12 text-center animate-fade-in-up">
+            <button (click)="loadMore()" class="inline-flex items-center gap-2 px-8 py-3.5 rounded-2xl bg-white border border-slate-200 text-slate-700 font-black text-[11px] uppercase tracking-widest hover:bg-slate-50 hover:text-blue-600 transition-all shadow-sm active:scale-95 group">
+              <svg class="h-4 w-4 text-slate-400 group-hover:text-blue-600 transition-colors animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
+              </svg>
+              Cargar más
+            </button>
+          </div>
+        }
+      } @else if (hasError()) {
+        <!-- Error Connection State -->
+        <div class="text-center py-20 bg-white rounded-3xl border border-dashed border-red-200 p-6 animate-fade-in max-w-lg mx-auto">
+          <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-red-50 text-red-500 mb-4 border border-red-100 shadow-inner">
+            <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-slate-900 mb-2">No se pudo cargar el catálogo</h3>
+          <p class="text-slate-500 text-sm mb-6">
+            Ha ocurrido un problema de conexión al obtener el listado de atracciones.
+          </p>
+          <button (click)="fetchAttractions()" class="cursor-pointer inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-purple-600 text-white font-bold text-sm hover:bg-purple-500 transition-all shadow-lg shadow-purple-500/25 active:scale-95">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            <span>Reintentar conexión</span>
+          </button>
+        </div>
+      } @else {
+        <!-- Empty State -->
+        <div class="text-center py-24 bg-white rounded-[3rem] border border-dashed border-slate-200 shadow-sm animate-in fade-in duration-500">
+          <div class="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-slate-50 text-slate-300 mb-6">
+            <svg class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+          <h3 class="text-2xl font-black text-slate-900 mb-2">No hemos encontrado nada</h3>
+          <p class="text-slate-500 font-medium max-w-xs mx-auto mb-8">Intenta ajustar los filtros o realiza una búsqueda diferente.</p>
+          <button (click)="clearAllFilters()" class="inline-flex items-center gap-2 px-8 py-3.5 rounded-2xl bg-blue-600 text-white font-black text-[11px] uppercase tracking-widest hover:bg-blue-500 transition-all shadow-lg shadow-blue-500/25 active:scale-95">Ver todo el catálogo</button>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Modals -->
+  <!-- Success Modal -->
+  @if (showSuccessModal()) {
+    <div appBlockScroll class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm animate-fade-in">
+      <div class="bg-white p-8 rounded-3xl shadow-2xl max-w-sm w-full mx-4 text-center border border-slate-100 animate-slide-up relative overflow-hidden">
+        <button (click)="closeAddSuccess()" class="cursor-pointer absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition-colors focus:outline-none">
+          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+        <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 mb-6 shadow-inner border border-emerald-50">
+          <svg class="h-8 w-8 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
+        </div>
+        <h3 class="text-xl font-black text-slate-900 mb-2">¡Añadido Correctamente!</h3>
+        <p class="text-slate-500 font-medium text-sm">
+          <span class="font-extrabold text-slate-800">{{ selectedAttraction()?.name }}</span> se ha registrado en tus atracciones con éxito.
+        </p>
+        <button (click)="closeAddSuccess()" class="cursor-pointer mt-6 w-full rounded-2xl bg-emerald-600 py-3.5 text-sm font-bold text-white hover:bg-emerald-500 shadow-lg shadow-emerald-500/20 active:scale-95 transition-all focus:outline-none">Aceptar</button>
+        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-4">
+          Cerrando en {{ countdown() }}s...
+        </p>
+        <div class="absolute bottom-0 left-0 h-1 bg-emerald-500 animate-progress-shrink"></div>
+      </div>
+    </div>
+  }
+
+  <!-- Delete Success Modal -->
+  @if (showDeleteSuccessModal()) {
+    <div appBlockScroll class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm animate-fade-in">
+      <div class="bg-white p-8 rounded-3xl shadow-2xl max-w-sm w-full mx-4 text-center border border-slate-100 animate-slide-up relative overflow-hidden">
+        <button (click)="closeDeleteSuccess()" class="cursor-pointer absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition-colors focus:outline-none">
+          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+        <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-red-100 mb-6 shadow-inner border border-red-50">
+          <svg class="h-8 w-8 text-red-600" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+          </svg>
+        </div>
+        <h3 class="text-xl font-black text-slate-900 mb-2">¡Eliminado Correctamente!</h3>
+        <p class="text-slate-500 font-medium text-sm">
+          <span class="font-extrabold text-slate-800">{{ selectedAttraction()?.name }}</span> se ha eliminado de tus atracciones con éxito.
+        </p>
+        <button (click)="closeDeleteSuccess()" class="cursor-pointer mt-6 w-full rounded-2xl bg-red-600 py-3.5 text-sm font-bold text-white hover:bg-red-500 shadow-lg shadow-red-500/20 active:scale-95 transition-all focus:outline-none">Aceptar</button>
+        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-4">
+          Cerrando en {{ countdown() }}s...
+        </p>
+        <div class="absolute bottom-0 left-0 h-1 bg-red-500 animate-progress-shrink"></div>
+      </div>
+    </div>
+  }
+
+  <!-- Delete Confirmation Modal -->
+  @if (showDeleteConfirmModal()) {
+    <div appBlockScroll class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-md animate-fade-in px-4 py-6 overflow-y-auto">
+      <div class="bg-white p-8 rounded-[2.5rem] shadow-2xl max-w-sm w-full text-center border border-slate-100 animate-slide-up relative overflow-hidden my-auto">
+        <button (click)="closeDeleteConfirm()" class="cursor-pointer absolute top-5 right-5 text-slate-400 hover:text-slate-600 transition-colors focus:outline-none">
+          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+        <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-red-50 text-red-500 mb-6 border border-red-100 shadow-inner">
+          <svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+          </svg>
+        </div>
+        <h3 class="text-xl font-black text-slate-900 mb-2">¿Eliminar registro?</h3>
+        <p class="text-slate-500 text-sm mb-8">
+          ¿Estás seguro de eliminar <span class="font-bold text-slate-700">{{ selectedAttraction()?.name }}</span> de tus atracciones?
+        </p>
+        <div class="flex gap-3">
+          <button (click)="closeDeleteConfirm()" class="cursor-pointer flex-1 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-700 font-bold text-sm hover:bg-slate-100 transition-all">Cancelar</button>
+          <button (click)="confirmDelete()" class="cursor-pointer flex-1 py-3 rounded-2xl bg-red-500 text-white font-bold text-sm hover:bg-red-600 transition-all shadow-lg shadow-red-500/25 active:scale-95">
+            Eliminar
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Add Confirmation Modal -->
+  @if (showAddConfirmModal()) {
+    <div appBlockScroll class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-md animate-fade-in px-4 py-6 overflow-y-auto">
+      <div class="bg-white p-8 rounded-[2.5rem] shadow-2xl max-w-sm w-full text-center border border-slate-100 animate-slide-up relative overflow-hidden my-auto">
+        <button (click)="closeAddConfirm()" class="cursor-pointer absolute top-5 right-5 text-slate-400 hover:text-slate-600 transition-colors focus:outline-none">
+          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+        <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-blue-50 text-blue-600 mb-6 border border-blue-100 shadow-inner">
+          <svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+          </svg>
+        </div>
+        <h3 class="text-xl font-black text-slate-900 mb-2">¿Registrar visita?</h3>
+        <p class="text-slate-500 text-sm mb-8">
+          ¿Quieres añadir <span class="font-bold text-slate-700">{{ selectedAttraction()?.name }}</span> a tus atracciones visitadas?
+        </p>
+        <div class="flex gap-3">
+          <button (click)="closeAddConfirm()" [disabled]="isSubmitting()" class="cursor-pointer flex-1 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-700 font-bold text-sm hover:bg-slate-100 transition-all disabled:opacity-50 disabled:cursor-not-allowed">Cancelar</button>
+          <button (click)="confirmAdd()" [disabled]="isSubmitting()" class="relative cursor-pointer flex-1 py-3 rounded-2xl bg-blue-600 text-white font-bold text-sm hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/25 active:scale-95 disabled:opacity-70 disabled:active:scale-100 disabled:cursor-not-allowed flex items-center justify-center">
+            <span [ngClass]="{'opacity-0': isSubmitting()}">Añadir</span>
+            @if (isSubmitting()) {
+              <div class="absolute inset-0 flex items-center justify-center">
+                <div class="h-5 w-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+              </div>
+            }
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Login Prompt Modal -->
+  @if (showLoginPromptModal()) {
+    <div appBlockScroll class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm animate-fade-in">
+      <div class="bg-white p-8 rounded-3xl shadow-2xl max-w-sm w-full mx-4 text-center border border-slate-100 animate-slide-up relative">
+        <button (click)="showLoginPromptModal.set(false)" class="cursor-pointer absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition-colors focus:outline-none">
+          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+        <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-blue-100 mb-6 shadow-inner border border-blue-50">
+          <svg class="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+          </svg>
+        </div>
+        <h3 class="text-xl font-black text-slate-900 mb-2">¡Acceso Requerido!</h3>
+        <p class="text-slate-500 font-medium mb-8">Debes iniciar sesión o registrarte para poder guardar atracciones en tu perfil.</p>
+        <div class="flex flex-col gap-3">
+          <button (click)="router.navigate(['/login'])" class="cursor-pointer w-full rounded-2xl bg-blue-600 py-3.5 text-sm font-bold text-white hover:bg-blue-500 shadow-lg shadow-blue-500/20 active:scale-95 transition-all focus:outline-none">Iniciar Sesión</button>
+          <button (click)="router.navigate(['/register'])" class="cursor-pointer w-full rounded-2xl bg-slate-50 py-3.5 text-sm font-bold text-slate-700 hover:bg-slate-100 active:scale-95 transition-all focus:outline-none border border-slate-200">Registrarse</button>
+        </div>
+      </div>
+    </div>
+  }
+  <!-- Botón Volver Arriba -->
+  @if (showScrollTop()) {
+    <button 
+      (click)="scrollToTop()" 
+      class="fixed bottom-6 right-6 sm:bottom-8 sm:right-8 z-[100] flex items-center justify-center w-12 h-12 rounded-full bg-white/90 backdrop-blur-md border border-slate-200/50 text-slate-500 shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:-translate-y-1 hover:shadow-[0_8px_30px_rgb(0,0,0,0.2)] hover:text-blue-600 transition-all duration-300 animate-in fade-in zoom-in group"
+      title="Volver arriba"
+    >
+      <svg class="w-5 h-5 group-hover:-translate-y-0.5 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 15l7-7 7 7" />
+      </svg>
+    </button>
+  }
+</main>

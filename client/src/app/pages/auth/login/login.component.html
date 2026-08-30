@@ -1,0 +1,296 @@
+<section class="relative isolate flex flex-col items-center justify-center min-h-[100dvh] pt-24 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden bg-slate-50 animate-fade-in-up">
+  <!-- Glowing Background -->
+  <div class="absolute inset-x-0 -top-40 -z-10 overflow-hidden blur-3xl pointer-events-none" aria-hidden="true">
+    <div class="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-sky-100 via-blue-200 to-blue-400 opacity-60 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"></div>
+  </div>
+
+  <div class="w-full max-w-md animate-fade-in-up" style="animation-duration: 0.6s;">
+    <!-- Logo/Branding Header -->
+    <div class="text-center mb-8">
+      <a routerLink="/" class="inline-flex items-center gap-2 mb-6 group cursor-pointer">
+        <svg class="h-10 w-10 text-blue-600 drop-shadow-sm transition-transform duration-500 ease-in-out group-hover:scale-110 group-hover:-rotate-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M2.5 17s3-11 6.5-11 5 11 8.5 11 4.5-8 4.5-8" />
+          <path d="M2.5 21s3-11 6.5-11 5 11 8.5 11 4.5-8 4.5-8" opacity="0.3" stroke-width="2" />
+          <rect x="7" y="4.5" width="4" height="3" rx="1" fill="currentColor" stroke="none" class="animate-bounce" style="animation-duration: 2s;" />
+        </svg>
+      </a>
+      <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Bienvenido de nuevo</h1>
+      <p class="mt-2 text-sm text-slate-600">
+        ¿Aún no tienes cuenta?
+        <a routerLink="/register" class="font-semibold text-blue-600 hover:text-blue-500 transition-colors focus:outline-none focus:underline">Regístrate gratis</a>
+      </p>
+    </div>
+
+    <!-- Login Card -->
+    <div class="bg-white/90 backdrop-blur-xl rounded-3xl shadow-xl shadow-slate-200/50 border border-white/50 p-6 sm:p-10">
+      
+      @if (!requires2FA()) {
+        <!-- STEP 1: Email + Password Login Form -->
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-6" novalidate>
+          
+          <!-- Email / Username Identifier -->
+          <div>
+            <label for="identifier" class="block text-sm font-semibold text-slate-700 mb-2">Correo electrónico o Usuario</label>
+            <div class="relative">
+              <input 
+                id="identifier" 
+                type="text" 
+                formControlName="identifier"
+                placeholder="tu@email.com o @usuario"
+                autocomplete="username"
+                maxlength="100"
+                class="block w-full rounded-xl border-0 py-3 px-4 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-200 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 bg-white/50 transition-all sm:text-sm sm:leading-6 duration-300 hover:bg-white"
+                [class.ring-red-500]="isSubmitted() && identifier?.invalid"
+                [class.focus:ring-red-500]="isSubmitted() && identifier?.invalid"
+              >
+              <!-- Error Icon -->
+              @if (isSubmitted() && identifier?.invalid) {
+                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-red-500">
+                  <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z" clip-rule="evenodd" />
+                  </svg>
+                </div>
+              }
+            </div>
+            @if (isSubmitted() && identifier?.errors?.['required']) {
+              <p class="mt-2 text-sm text-red-600 animate-fade-in-up" style="animation-duration: 0.3s;">Introduce tu correo electrónico o nombre de usuario</p>
+            }
+          </div>
+
+          <!-- Password -->
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <label for="password" class="block text-sm font-semibold text-slate-700">Contraseña</label>
+            </div>
+            <div class="relative">
+              <input 
+                id="password" 
+                [type]="showPassword() ? 'text' : 'password'" 
+                formControlName="password"
+                placeholder="••••••••"
+                autocomplete="current-password"
+                maxlength="128"
+                class="block w-full rounded-xl border-0 py-3 pl-4 pr-12 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-200 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 bg-white/50 transition-all sm:text-sm sm:leading-6 duration-300 hover:bg-white"
+                [class.ring-red-500]="isSubmitted() && password?.invalid"
+                [class.focus:ring-red-500]="isSubmitted() && password?.invalid"
+              >
+              <!-- Toggle visibility button -->
+              <button 
+                type="button" 
+                (click)="togglePassword()"
+                class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-blue-600 focus:outline-none transition-colors cursor-pointer"
+              >
+                @if (showPassword()) {
+                  <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                  </svg>
+                } @else {
+                  <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 12-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                }
+              </button>
+            </div>
+            @if (isSubmitted() && password?.errors?.['required']) {
+              <p class="mt-2 text-sm text-red-600 animate-fade-in-up" style="animation-duration: 0.3s;">La contraseña es obligatoria</p>
+            }
+          </div>
+
+          <!-- API Error Message -->
+          @if (errorMessage()) {
+            <div class="rounded-2xl border p-4 animate-fade-in-up" 
+                 [class]="isGoogleHint() ? 'bg-amber-50/90 border-amber-200 text-amber-900' : 'bg-red-50/90 border-red-200 text-red-700'"
+                 style="animation-duration: 0.3s;">
+              <div class="flex items-start gap-3">
+                @if (isGoogleHint()) {
+                  <svg class="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z" clip-rule="evenodd" />
+                  </svg>
+                } @else {
+                  <svg class="h-5 w-5 text-red-500 flex-shrink-0 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clip-rule="evenodd" />
+                  </svg>
+                }
+                <div class="flex-1">
+                  <p class="text-xs font-semibold leading-relaxed">{{ errorMessage() }}</p>
+                  @if (isGoogleHint()) {
+                    <button type="button" 
+                            (click)="onGoogleLogin()" 
+                            class="cursor-pointer mt-3 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-white border border-amber-300 text-xs font-bold text-slate-800 shadow-sm hover:bg-amber-100/60 transition-all active:scale-95">
+                      <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" class="h-4 w-4">
+                      Iniciar con Google ahora
+                    </button>
+                  }
+                </div>
+              </div>
+            </div>
+          }
+
+          <div>
+            <button 
+              type="submit" 
+              [disabled]="isLoading()"
+              class="cursor-pointer group relative flex w-full justify-center rounded-xl bg-blue-600 px-3 py-3.5 text-sm font-semibold text-white shadow-md shadow-blue-500/30 hover:bg-blue-500 hover:shadow-lg hover:shadow-blue-500/40 hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+            >
+              @if (isLoading()) {
+                <svg class="animate-spin -ml-1 mr-2 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                </svg>
+                Iniciando sesión...
+              } @else {
+                Iniciar sesión
+              }
+              <div class="absolute inset-0 rounded-xl ring-2 ring-white/20 group-hover:ring-white/40 transition-all pointer-events-none"></div>
+            </button>
+          </div>
+
+          <!-- Divider -->
+          <div class="relative my-2">
+            <div class="absolute inset-0 flex items-center" aria-hidden="true">
+              <div class="w-full border-t border-slate-200"></div>
+            </div>
+            <div class="relative flex justify-center text-xs">
+              <span class="bg-white px-3 text-slate-500 font-medium tracking-wide">o continúa con</span>
+            </div>
+          </div>
+
+          <!-- Social Buttons -->
+          <div class="space-y-3">
+            <!-- Google - Large full width -->
+            <button type="button"
+              (click)="onGoogleLogin()"
+              [disabled]="isLoading()"
+              class="flex w-full items-center justify-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3.5 text-sm font-semibold text-slate-700 shadow-sm hover:bg-slate-50 hover:border-slate-300 hover:shadow-md hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 transition-all duration-200 disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:translate-y-0 cursor-pointer">
+              @if (isLoading()) {
+                <svg class="animate-spin h-5 w-5 text-slate-700" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                </svg>
+                <span>Conectando con Google...</span>
+              } @else {
+                <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" class="h-5 w-5 flex-shrink-0">
+                <span>Continuar con Google</span>
+              }
+            </button>
+          </div>
+
+          <p class="text-[11px] text-center text-slate-400 leading-tight pt-1">
+            Al identificarte, aceptas nuestros 
+            <a routerLink="/terminos" target="_blank" class="text-blue-600 font-semibold hover:underline">Términos</a> 
+            y 
+            <a routerLink="/privacidad" target="_blank" class="text-blue-600 font-semibold hover:underline">Privacidad</a>.
+          </p>
+        </form>
+      } @else {
+        <!-- STEP 2: 2FA Authentication Code Screen (EMAIL or APP) -->
+        <div class="space-y-6 animate-fade-in">
+          <div class="text-center">
+            @if (twoFactorType() === 'EMAIL') {
+              <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 mb-3 border border-blue-100 shadow-inner">
+                <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                </svg>
+              </div>
+              <h2 class="text-xl font-bold text-slate-900">Verificación por Correo</h2>
+              <p class="text-xs text-slate-500 mt-1">
+                Hemos enviado un código de 6 dígitos a <span class="font-bold text-slate-700">{{ maskedEmail() || 'tu correo' }}</span>.
+              </p>
+            } @else {
+              <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 mb-3 border border-emerald-100 shadow-inner">
+                <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                </svg>
+              </div>
+              <h2 class="text-xl font-bold text-slate-900">Verificación con App</h2>
+              <p class="text-xs text-slate-500 mt-1">Introduce el código que muestra tu app Authenticator (Google Authenticator, Authy, etc.).</p>
+            }
+          </div>
+
+          <!-- Spam Notice Box for Email 2FA -->
+          @if (twoFactorType() === 'EMAIL') {
+            <div class="p-3 bg-amber-50/90 border border-amber-200 rounded-2xl flex items-start gap-2.5 text-left text-amber-900 animate-fade-in">
+              <span class="text-base leading-none mt-0.5 flex-shrink-0">📬</span>
+              <p class="text-[11px] leading-tight font-medium text-amber-800">
+                <strong class="font-bold text-amber-950">Aviso:</strong> Si no lo ves en tu bandeja principal, revisa tu carpeta de <strong>Spam o Correo no deseado</strong>.
+              </p>
+            </div>
+          }
+
+          <!-- Resend Success Banner -->
+          @if (resendSuccess()) {
+            <div class="rounded-2xl bg-emerald-50 border border-emerald-200 p-3 text-xs font-semibold text-emerald-800 flex items-center gap-2 animate-fade-in">
+              <svg class="w-4 h-4 text-emerald-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+              <span>{{ resendSuccess() }}</span>
+            </div>
+          }
+
+          <!-- API Error Message -->
+          @if (errorMessage()) {
+            <div class="rounded-2xl bg-red-50 border border-red-200 p-3.5 text-xs font-semibold text-red-700 flex items-start gap-2 animate-fade-in-up">
+              <svg class="w-4 h-4 shrink-0 mt-0.5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              <span>{{ errorMessage() }}</span>
+            </div>
+          }
+
+          <form (submit)="$event.preventDefault(); onSubmit2FA()" class="space-y-4">
+            <div>
+              <input type="text"
+                     inputmode="numeric"
+                     pattern="[0-9]*"
+                     maxlength="6"
+                     autocomplete="one-time-code"
+                     autofocus
+                     [ngModel]="twoFACode()"
+                     (input)="on2FAInput($event)"
+                     name="login2FACode"
+                     placeholder="123456"
+                     [class]="twoFactorType() === 'EMAIL' ? 'focus:ring-blue-500 ring-slate-200' : 'focus:ring-emerald-500 ring-slate-200'"
+                     class="text-center font-mono text-3xl font-bold tracking-[0.3em] text-slate-900 w-full rounded-2xl border-0 py-3.5 px-4 ring-2 ring-inset bg-slate-50 transition-all">
+            </div>
+
+            <!-- Resend link for Email 2FA -->
+            @if (twoFactorType() === 'EMAIL') {
+              <div class="flex items-center justify-between text-xs px-1">
+                <span class="text-slate-400">¿No recibiste el correo?</span>
+                <button type="button"
+                        (click)="resendEmailCode()"
+                        [disabled]="resendLoading() || resendCooldown() > 0"
+                        class="cursor-pointer font-bold text-blue-600 hover:text-blue-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+                  @if (resendCooldown() > 0) {
+                    Reenviar en {{ resendCooldown() }}s
+                  } @else if (resendLoading()) {
+                    Enviando...
+                  } @else {
+                    Reenviar código
+                  }
+                </button>
+              </div>
+            }
+
+            <div class="flex gap-3 pt-2">
+              <button type="button"
+                      (click)="cancel2FA()"
+                      class="cursor-pointer w-1/3 rounded-2xl bg-slate-100 py-3.5 text-sm font-bold text-slate-700 hover:bg-slate-200 active:scale-95 transition-all focus:outline-none">
+                Volver
+              </button>
+              <button type="submit"
+                      [disabled]="isLoading() || twoFACode().trim().length !== 6"
+                      [class]="twoFactorType() === 'EMAIL' ? 'bg-blue-600 hover:bg-blue-500 shadow-blue-500/25' : 'bg-emerald-600 hover:bg-emerald-500 shadow-emerald-500/25'"
+                      class="cursor-pointer flex-1 rounded-2xl py-3.5 text-sm font-bold text-white shadow-md active:scale-95 transition-all focus:outline-none flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                @if (isLoading()) {
+                  <svg class="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
+                  <span>Verificando...</span>
+                } @else {
+                  <span>Verificar y Entrar</span>
+                }
+              </button>
+            </div>
+          </form>
+        </div>
+      }
+
+    </div>
+  </div>
+</section>

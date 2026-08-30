@@ -1,0 +1,181 @@
+<main class="min-h-screen bg-slate-50 pt-24 pb-20 px-4 sm:px-6 lg:px-8 animate-fade-in-up">
+  @if (isInitialLoading()) {
+    <!-- Full Page Loading State (Idéntico al de Parques y Credits) -->
+    <div class="flex flex-col items-center justify-center py-40 space-y-10 animate-fade-in">
+      <div class="relative">
+        <div class="h-24 w-24 border-8 border-slate-100 border-t-blue-600 rounded-full animate-spin"></div>
+        <div class="absolute inset-0 flex items-center justify-center">
+          <span class="text-3xl">🏆</span>
+        </div>
+      </div>
+      <div class="text-center space-y-4 max-w-sm mx-auto px-6">
+        <h3 class="text-2xl font-black text-slate-800 tracking-tight leading-tight">Cargando Ranking Global</h3>
+        <div class="space-y-2">
+          <p class="text-slate-500 font-bold text-xs uppercase tracking-[0.2em] animate-pulse">Sincronizando destinos e imágenes oficiales...</p>
+          <p class="text-[10px] text-slate-400 font-medium leading-relaxed italic">
+            Estamos preparando toda la información para mostrártela con la mejor calidad.
+          </p>
+        </div>
+      </div>
+    </div>
+  } @else {
+    <div class="max-w-6xl mx-auto">
+      <!-- Header Section -->
+      <div class="text-center mb-16 space-y-4">
+        <h1 class="text-4xl md:text-5xl font-black text-slate-900 tracking-tight">Ranking Global</h1>
+        <p class="text-slate-500 max-w-2xl mx-auto text-lg leading-relaxed">
+          Descubre cuáles son los destinos y experiencias más valorados por la comunidad internacional.
+        </p>
+        <div class="inline-flex items-center gap-2.5 bg-blue-50/80 text-blue-800 px-4 py-2.5 rounded-2xl text-xs md:text-sm font-bold border border-blue-100 shadow-sm mt-4 text-left md:text-center">
+          <span class="text-base md:text-lg">🏆</span> 
+          <span>Ranking basado en los <strong>Golden Ticket Awards 2025</strong> y el <strong>TEA/AECOM Global Attractions Report</strong>.</span>
+        </div>
+      </div>
+
+      <!-- Category Tabs -->
+      <div class="flex flex-wrap justify-center gap-4 mb-12">
+        @for (cat of categories(); track cat.id) {
+          <button 
+            (click)="selectCategory(cat.id)"
+            [class]="activeCategoryId() === cat.id 
+              ? 'bg-blue-600 text-white shadow-xl shadow-blue-500/30' 
+              : 'bg-white text-slate-600 hover:bg-slate-100 hover:text-slate-900 shadow-sm'"
+            class="flex items-center gap-3 px-6 py-4 rounded-2xl font-bold transition-all duration-300 active:scale-95"
+          >
+            <span class="text-xl">{{ cat.icon }}</span>
+            {{ cat.name }}
+          </button>
+        }
+      </div>
+
+      <!-- Ranking List -->
+      <div class="space-y-6">
+        @for (item of displayedItems(); track item.id) {
+          <div 
+            class="group relative bg-white rounded-3xl p-6 md:p-8 flex flex-col md:flex-row items-center gap-6 shadow-sm hover:shadow-xl transition-all duration-500 border border-slate-100"
+            [style.z-index]="100 - item.position"
+            [style.zoom]="getScale(item.position)"
+          >
+            <!-- Position Highlight -->
+            <div 
+              class="flex items-center justify-center h-16 w-16 md:h-20 md:w-20 rounded-2xl font-black text-2xl md:text-3xl shrink-0 transition-transform group-hover:scale-110 duration-500"
+              [ngClass]="{
+                'bg-amber-100 text-amber-600 ring-4 ring-amber-50': item.position === 1,
+                'bg-slate-100 text-slate-500 ring-4 ring-slate-50': item.position === 2,
+                'bg-orange-100 text-orange-600 ring-4 ring-orange-50': item.position === 3,
+                'bg-slate-50 text-slate-400': item.position > 3
+              }"
+            >
+              #{{ item.position }}
+            </div>
+
+            <!-- Image Container -->
+            <div class="relative w-full sm:w-36 md:w-48 h-44 sm:h-32 rounded-2xl overflow-hidden shrink-0 shadow-lg group-hover:rotate-1 transition-transform bg-slate-100 dark:bg-slate-800">
+              <img [src]="item.image" [alt]="item.name" loading="lazy" decoding="async" (error)="onImageError(item)" class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110">
+            </div>
+
+            <!-- Content -->
+            <div class="flex-1 text-center md:text-left space-y-1">
+              <h3 class="text-2xl font-black text-slate-900 group-hover:text-blue-600 transition-colors">{{ item.name }}</h3>
+              <p class="text-slate-500 font-bold uppercase tracking-wider text-xs">
+                {{ item.park ? item.park + ' • ' : '' }}{{ item.subtitle }}
+              </p>
+
+              @if (item.tipo || item.gestor) {
+                <div class="text-xs md:text-sm font-semibold text-slate-600 pt-2 flex flex-col md:flex-row items-center md:items-start gap-2 md:gap-4">
+                  @if (item.tipo) {
+                    <span class="flex items-center gap-1.5 bg-slate-100/80 px-2.5 py-1 rounded-lg">
+                      <span class="text-base leading-none">🏷️</span> {{ item.tipo }}
+                    </span>
+                  }
+                  @if (item.gestor) {
+                    <span class="flex items-center gap-1.5 bg-slate-100/80 px-2.5 py-1 rounded-lg">
+                      <span class="text-base leading-none">🏢</span> {{ item.gestor }}
+                    </span>
+                  }
+                </div>
+              }
+
+              <div class="mt-4 flex flex-wrap justify-center md:justify-start gap-4 pt-1">
+                <span class="inline-flex items-center px-3 py-1 rounded-full bg-slate-50 border border-slate-200 text-[10px] font-black uppercase text-slate-600">
+                  Puntuación: <span class="text-slate-900 dark:text-white ml-1">{{ item.score }}</span>
+                </span>
+                @if (item.trend === 'up') {
+                  <span class="inline-flex items-center text-emerald-600 text-[10px] font-black uppercase">
+                    <svg class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 10l7-7m0 0l7 7m-7-7v18" /></svg>
+                    Subiendo
+                  </span>
+                } @else if (item.trend === 'down') {
+                  <span class="inline-flex items-center text-red-500 text-[10px] font-black uppercase">
+                    <svg class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 14l-7 7m0 0l-7-7m7 7V3" /></svg>
+                    Bajando
+                  </span>
+                }
+              </div>
+            </div>
+
+
+
+            <!-- Ribbon for #1 -->
+            @if (item.position === 1) {
+              <div class="absolute top-0 right-10 -translate-y-1/2 bg-amber-500 text-white px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-xl">
+                BEST CHOICE
+              </div>
+            }
+          </div>
+        }
+      </div>
+
+      @if (hasMoreItems()) {
+        <div class="mt-12 text-center">
+          <button 
+            (click)="loadMore()"
+            [disabled]="isLoadingMore()"
+            class="px-8 py-4 rounded-2xl bg-white border-2 border-slate-200 text-slate-700 font-bold shadow-sm hover:border-blue-600 hover:text-blue-600 hover:shadow-md transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center gap-2"
+          >
+            @if (isLoadingMore()) {
+              <div class="h-4 w-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+              <span>Cargando más destinos...</span>
+            } @else {
+              <span>Ver más</span>
+            }
+          </button>
+        </div>
+      }
+
+      <!-- Disclaimer / Footer Section -->
+      <div class="mt-20 text-center p-10 md:p-14 bg-gradient-to-br from-blue-700 to-blue-900 rounded-[3rem] text-white shadow-2xl shadow-blue-500/30 relative overflow-hidden group">
+          <div class="relative z-10 flex flex-col items-center">
+              <h2 class="text-3xl font-black mb-4 flex items-center justify-center gap-3">
+                  <span class="text-4xl group-hover:scale-110 group-hover:rotate-12 transition-transform duration-500">🏆</span>
+                  <span>Sobre este ranking</span>
+              </h2>
+              <p class="opacity-90 max-w-2xl mx-auto mb-4 text-lg font-semibold leading-relaxed">
+                  Este listado ha sido elaborado tomando como referencia los recuentos oficiales del <strong>TEA/AECOM Global Attractions Report</strong> y los ganadores de los prestigiosos <strong>Golden Ticket Awards 2025</strong>.
+              </p>
+              <div class="h-1 w-16 bg-blue-400/50 rounded-full my-4"></div>
+              <p class="opacity-80 max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
+                  Sabemos que en el mundo de las montañas rusas todo es muy subjetivo y cada persona tiene sus propios gustos. Al final, el mejor parque del mundo es donde creas las mejores anécdotas con tus amigos, 
+                  ¡así que diviértete creando tu propio ranking personal sin preocuparte de las listas oficiales! 😄🎢
+              </p>
+          </div>
+          <!-- Background decorative elements -->
+          <div class="absolute -bottom-10 -right-10 h-64 w-64 rounded-full bg-blue-400/10 blur-3xl"></div>
+          <div class="absolute -top-10 -left-10 h-48 w-48 rounded-full bg-cyan-400/10 blur-2xl"></div>
+          <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-96 w-96 rounded-full bg-white/5 blur-3xl pointer-events-none"></div>
+      </div>
+    </div>
+  }
+  <!-- Botón Volver Arriba -->
+  @if (showScrollTop()) {
+    <button 
+      (click)="scrollToTop()" 
+      class="fixed bottom-6 right-6 sm:bottom-8 sm:right-8 z-[100] flex items-center justify-center w-12 h-12 rounded-full bg-white/90 backdrop-blur-md border border-slate-200/50 text-slate-500 shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:-translate-y-1 hover:shadow-[0_8px_30px_rgb(0,0,0,0.2)] hover:text-blue-600 transition-all duration-300 animate-in fade-in zoom-in group"
+      title="Volver arriba"
+    >
+      <svg class="w-5 h-5 group-hover:-translate-y-0.5 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 15l7-7 7 7" />
+      </svg>
+    </button>
+  }
+</main>

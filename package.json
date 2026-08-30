@@ -1,0 +1,22 @@
+{
+  "name": "rcmanager-app",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "scripts": {
+    "dev": "concurrently -n \"SERVER,CLIENT\" -c \"blue,magenta\" \"npm run dev --workspace=server\" \"npm run start --workspace=client\"",
+    "dev:server": "npm run dev --workspace=server",
+    "dev:client": "npm run start --workspace=client",
+    "build": "npm run build --workspace=server && npm run build --workspace=client",
+    "build:server": "npm run build --workspace=server",
+    "build:client": "npm run build --workspace=client",
+    "test:server": "tsx server/test-all-flows.ts",
+    "postinstall": "npm run prisma:generate --workspace=server"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

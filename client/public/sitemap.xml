@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+  
+  <!-- Página Principal / Landing -->
+  <url>
+    <loc>https://rcmanager.app/</loc>
+    <lastmod>2026-08-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.00</priority>
+  </url>
+
+  <!-- Catálogo de Montañas Rusas / Credits -->
+  <url>
+    <loc>https://rcmanager.app/credits</loc>
+    <lastmod>2026-08-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+
+  <!-- Catálogo de Atracciones -->
+  <url>
+    <loc>https://rcmanager.app/atracciones</loc>
+    <lastmod>2026-08-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+
+  <!-- Directorio de Parques Temáticos -->
+  <url>
+    <loc>https://rcmanager.app/parques</loc>
+    <lastmod>2026-08-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+
+  <!-- Ranking Global de la Comunidad -->
+  <url>
+    <loc>https://rcmanager.app/ranking</loc>
+    <lastmod>2026-08-26</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <!-- Centro Legal: Términos de Servicio -->
+  <url>
+    <loc>https://rcmanager.app/terminos</loc>
+    <lastmod>2026-08-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.50</priority>
+  </url>
+
+  <!-- Centro Legal: Política de Privacidad -->
+  <url>
+    <loc>https://rcmanager.app/privacidad</loc>
+    <lastmod>2026-08-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.50</priority>
+  </url>
+
+  <!-- Centro Legal: Política de Cookies -->
+  <url>
+    <loc>https://rcmanager.app/cookies</loc>
+    <lastmod>2026-08-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.40</priority>
+  </url>
+
+  <!-- Centro Legal: Aviso Legal LSSI-CE -->
+  <url>
+    <loc>https://rcmanager.app/aviso-legal</loc>
+    <lastmod>2026-08-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.40</priority>
+  </url>
+
+</urlset>

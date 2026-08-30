@@ -1,0 +1,680 @@
+<main class="min-h-screen bg-slate-50 pt-24 pb-20 px-6 lg:px-8 animate-fade-in-up">
+  @if (isInitialLoading()) {
+    <!-- Full Page Loading State -->
+    <div class="flex flex-col items-center justify-center py-40 space-y-10 animate-fade-in">
+      <div class="relative">
+        <div class="h-24 w-24 border-8 border-slate-100 border-t-blue-600 rounded-full animate-spin"></div>
+        <div class="absolute inset-0 flex items-center justify-center">
+          <svg class="h-10 w-10 text-blue-600 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+          </svg>
+        </div>
+      </div>
+      <div class="text-center space-y-4 max-w-sm mx-auto px-6">
+        <h3 class="text-2xl font-black text-slate-800 tracking-tight leading-tight">Configurando tu experiencia</h3>
+        <div class="space-y-2">
+          <p class="text-slate-500 font-bold text-xs uppercase tracking-[0.2em] animate-pulse">Sincronizando tiempos reales de hoy...</p>
+          <p class="text-[10px] text-slate-400 font-medium leading-relaxed italic">
+            Esto puede tardar un momento debido a la consulta individual de cada destino.
+          </p>
+        </div>
+      </div>
+    </div>
+  } @else {
+    <!-- Header / Internal Navbar -->
+    <!-- Header / Filter Grid Structure -->
+    <div class="max-w-7xl mx-auto mb-12">
+      <!-- Header Bar -->
+      <div class="relative flex flex-col lg:flex-row items-center justify-between gap-4 bg-white p-4 sm:px-6 sm:py-4 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100/80 overflow-hidden z-10">
+        <!-- Decoración sutil de fondo -->
+        <div class="absolute -right-20 -top-20 w-64 h-64 bg-blue-50/50 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -left-20 -bottom-20 w-64 h-64 bg-purple-50/50 rounded-full blur-3xl pointer-events-none"></div>
+        
+        <div class="flex items-baseline gap-3 relative z-10 w-full lg:w-auto overflow-hidden">
+          <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight shrink-0">Parques Temáticos</h1>
+          <p class="text-slate-500 font-medium text-sm truncate">Explora los mejores destinos de entretenimiento del mundo.</p>
+        </div>
+
+        <div class="flex flex-row gap-3 w-full lg:max-w-[32rem] relative z-10">
+          <!-- Search Input -->
+          <div class="relative flex-1 group">
+            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 transition-colors duration-300 group-focus-within:text-blue-600">
+              <svg class="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </div>
+            <input 
+              type="text" 
+              [ngModel]="searchQuery()"
+              (ngModelChange)="updateSearch($event)"
+              placeholder="Nombre, ciudad o país..." 
+              maxlength="80"
+              class="block w-full rounded-[1.25rem] border-0 py-2.5 sm:py-3 pl-10 sm:pl-12 pr-4 text-slate-700 shadow-sm ring-1 ring-inset ring-slate-200/80 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 focus:shadow-[0_8px_30px_rgb(59,130,246,0.15)] bg-slate-50/50 hover:bg-slate-50 focus:bg-white transition-all duration-300 text-sm font-bold outline-none"
+            >
+          </div>
+
+          <!-- Filter Toggle -->
+          <button 
+            (click)="showFilters.set(!showFilters())"
+            [ngClass]="{
+              'bg-slate-900 text-white shadow-xl shadow-slate-900/20 border-slate-900': showFilters(), 
+              'bg-white text-slate-700 border-slate-200 shadow-sm hover:shadow-md hover:border-slate-300 hover:bg-slate-50': !showFilters()
+            }"
+            class="filter-toggle-btn relative flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-[1.25rem] border transition-all duration-300 font-extrabold text-[11px] uppercase tracking-widest hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] whitespace-nowrap"
+          >
+            <svg class="h-4 w-4 sm:h-5 sm:w-5 transition-transform duration-300" [ngClass]="{'rotate-180 text-blue-400': showFilters(), 'text-slate-400': !showFilters()}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+            </svg>
+            <span class="hidden sm:inline">Filtros</span>
+            @if (selectedCountries().length + selectedStatuses().length + selectedCrowds().length > 0) {
+              <span 
+                class="flex h-5 min-w-[20px] px-1.5 items-center justify-center rounded-full text-[10px] font-black transition-colors"
+                [ngClass]="{
+                  'bg-white text-slate-900': showFilters(),
+                  'bg-blue-600 text-white shadow-md shadow-blue-600/20': !showFilters()
+                }"
+              >
+                {{ selectedCountries().length + selectedStatuses().length + selectedCrowds().length }}
+              </span>
+            }
+          </button>
+
+          <!-- Mobile Grid Toggle -->
+          <div class="flex sm:hidden items-center bg-slate-100/80 rounded-[1.25rem] p-1 border border-slate-200 shrink-0">
+            <button 
+              (click)="gridMode.set('large')"
+              [ngClass]="gridMode() === 'large' ? 'bg-white shadow-sm text-slate-900' : 'text-slate-400 hover:text-slate-600'"
+              class="cursor-pointer p-2 rounded-xl transition-all"
+            >
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <rect x="4" y="4" width="16" height="16" rx="3" stroke-width="2.5"/>
+              </svg>
+            </button>
+            <button 
+              (click)="gridMode.set('compact')"
+              [ngClass]="gridMode() === 'compact' ? 'bg-white shadow-sm text-slate-900' : 'text-slate-400 hover:text-slate-600'"
+              class="cursor-pointer p-2 rounded-xl transition-all"
+            >
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <rect x="3" y="3" width="7" height="7" rx="2" stroke-width="2.5"/>
+                <rect x="14" y="3" width="7" height="7" rx="2" stroke-width="2.5"/>
+                <rect x="3" y="14" width="7" height="7" rx="2" stroke-width="2.5"/>
+                <rect x="14" y="14" width="7" height="7" rx="2" stroke-width="2.5"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filter Panel Grid (Matches width exactly) -->
+      <div class="grid grid-cols-1 md:grid-cols-[1fr,minmax(auto,42rem)] mt-6 px-7">
+        <div class="hidden md:block"></div> <!-- Spacer -->
+        
+        @if (showFilters()) {
+          <div class="filter-panel w-full bg-white/80 backdrop-blur-xl rounded-[2.5rem] border border-white/40 shadow-[0_25px_60px_rgba(0,0,0,0.06)] p-8 animate-in fade-in zoom-in-95 duration-300 relative z-30 overflow-hidden">
+            <!-- Decoration Gradients -->
+            <div class="absolute -top-24 -right-24 w-48 h-48 bg-blue-500/5 blur-[80px] rounded-full"></div>
+            <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-emerald-500/5 blur-[80px] rounded-full"></div>
+
+            <div class="relative grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              <!-- Países -->
+              <div class="space-y-4 flex flex-col h-full">
+                <h4 class="text-[10px] font-extrabold uppercase tracking-[0.15em] text-slate-500 border-l-3 border-blue-500 pl-3">Países</h4>
+                <div class="flex flex-col gap-2.5 max-h-32 overflow-y-auto pr-2 custom-scrollbar mb-4">
+                  @for (country of countries(); track country) {
+                    <label class="flex items-center gap-3 cursor-pointer group py-0.5">
+                      <div class="relative flex items-center">
+                        <input 
+                          type="checkbox" 
+                          [checked]="selectedCountries().includes(country)"
+                          (change)="toggleCountry(country)"
+                          class="peer appearance-none h-4.5 w-4.5 rounded-md border border-slate-200 checked:bg-blue-600 checked:border-blue-600 transition-all cursor-pointer shadow-sm"
+                        >
+                        <svg class="absolute h-3.5 w-3.5 text-white opacity-0 peer-checked:opacity-100 left-0.5 pointer-events-none transition-p-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                      <span class="text-sm font-semibold text-slate-700 group-hover:text-slate-900 transition-colors">{{ country }}</span>
+                    </label>
+                  }
+                </div>
+
+                <!-- Footer Buttons -->
+                <div class="mt-auto pt-4 border-t border-slate-50 flex gap-2">
+                  <button 
+                    (click)="clearAllFilters()"
+                    class="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl border border-red-50 text-red-500 bg-red-50/30 hover:bg-red-50 transition-all text-[8px] font-black uppercase tracking-widest"
+                  >
+                    Limpiar
+                  </button>
+                  <button 
+                    (click)="showFilters.set(false)"
+                    class="flex-1 px-3 py-2.5 rounded-xl bg-slate-900 text-white hover:bg-slate-800 transition-all text-[8px] font-black uppercase tracking-widest shadow-lg shadow-slate-900/10"
+                  >
+                    Cerrar
+                  </button>
+                </div>
+              </div>
+
+              <!-- Estado Operativo -->
+              <div class="space-y-4">
+                <h4 class="text-[10px] font-extrabold uppercase tracking-[0.15em] text-slate-500 border-l-3 border-emerald-500 pl-3">Estado Operativo</h4>
+                <div class="flex flex-col gap-2.5">
+                  @for (st of ['Abierto', 'Cerrado', 'Sin Datos']; track st) {
+                    <label class="flex items-center gap-3 cursor-pointer group p-2.5 rounded-2xl hover:bg-white/50 border border-transparent hover:border-slate-100 transition-all">
+                      <div class="relative flex items-center">
+                        <input 
+                          type="checkbox" 
+                          [checked]="selectedStatuses().includes(st)"
+                          (change)="toggleStatus(st)"
+                          class="peer appearance-none h-4.5 w-4.5 rounded-md border border-slate-200 checked:bg-emerald-600 checked:border-emerald-600 transition-all cursor-pointer shadow-sm"
+                        >
+                        <svg class="absolute h-3.5 w-3.5 text-white opacity-0 peer-checked:opacity-100 left-0.5 pointer-events-none transition-p-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                      <div class="flex items-center gap-2">
+                        <span class="h-1.5 w-1.5 rounded-full shadow-sm" [ngClass]="{'bg-emerald-500': st === 'Abierto', 'bg-red-500': st === 'Cerrado', 'bg-slate-300': st === 'Sin Datos'}"></span>
+                        <span class="text-xs font-bold uppercase tracking-widest text-slate-700">{{ st }}</span>
+                      </div>
+                    </label>
+                  }
+                </div>
+              </div>
+
+              <!-- Afluencia -->
+              <div class="space-y-4">
+                <h4 class="text-[10px] font-extrabold uppercase tracking-[0.15em] text-slate-500 border-l-3 border-amber-500 pl-3">Nivel de Afluencia</h4>
+                <div class="flex flex-wrap gap-2">
+                  @for (cr of ['Muy Baja', 'Baja', 'Normal', 'Alta', 'Muy Alta']; track cr) {
+                    <label class="flex items-center gap-3 cursor-pointer group px-3 py-2 rounded-xl transition-all hover:bg-white/40">
+                      <div class="relative flex items-center">
+                        <input 
+                          type="checkbox" 
+                          [checked]="selectedCrowds().includes(cr)"
+                          (change)="toggleCrowd(cr)"
+                          class="peer appearance-none h-4.5 w-4.5 rounded-md border border-slate-200 checked:bg-amber-600 checked:border-amber-600 transition-all cursor-pointer shadow-sm"
+                        >
+                        <svg class="absolute h-3.5 w-3.5 text-white opacity-0 peer-checked:opacity-100 left-0.5 pointer-events-none transition-p-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                      <span class="text-[10px] font-black uppercase px-3.5 py-2 rounded-lg transition-all shadow-sm border"
+                        [ngClass]="{
+                          'bg-emerald-50 text-emerald-800 border-emerald-100': cr === 'Muy Baja',
+                          'bg-emerald-50 text-emerald-700 border-emerald-100': cr === 'Baja',
+                          'bg-amber-50 text-amber-700 border-amber-100': cr === 'Normal',
+                          'bg-orange-50 text-orange-700 border-orange-100': cr === 'Alta',
+                          'bg-red-50 text-red-700 border-red-100': cr === 'Muy Alta'
+                        }">{{ cr }}</span>
+                    </label>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Disclaimer (Upper) -->
+    <div class="max-w-7xl mx-auto mb-6 px-4 sm:px-0">
+      <div class="flex items-center justify-center gap-2 px-4 py-2 bg-slate-100/50 rounded-2xl border border-slate-200/40 shadow-sm transition-all hover:bg-slate-100">
+        <svg class="h-3 w-3 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <p class="text-[9px] font-bold text-slate-500 uppercase tracking-widest text-center">
+          Los tiempos y estados son estimaciones en tiempo real y pueden presentar variaciones puntuales.
+        </p>
+      </div>
+    </div>
+
+    <!-- Park Grid -->
+    <div class="max-w-7xl mx-auto min-h-[50vh]">
+      @if (filteredParks().length > 0) {
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 sm:gap-10"
+             [ngClass]="gridMode() === 'compact' ? 'grid-cols-2 gap-3' : 'grid-cols-1 gap-10'">
+          @for (park of filteredParks(); track park.id) {
+            <div class="group bg-white overflow-hidden shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 border border-slate-100 flex flex-col"
+                 [ngClass]="gridMode() === 'compact' ? 'rounded-[1.5rem]' : 'rounded-[2.5rem]'">
+              <!-- Image Section -->
+              <div class="relative overflow-hidden bg-slate-100 dark:bg-slate-800" [ngClass]="gridMode() === 'compact' ? 'h-32 sm:h-64' : 'h-64'">
+                <img
+                  [src]="park.image"
+                  [alt]="park.name"
+                  class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  (error)="handleImageError($event, park)"
+                  loading="lazy"
+                  decoding="async"
+                >
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-slate-900/10 to-transparent pointer-events-none"></div>
+
+                <div class="absolute right-2 top-2 sm:top-6 sm:right-6">
+                  <button (click)="$event.stopPropagation(); showParkDetails(park)" 
+                          class="cursor-pointer rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 text-white shadow-xl flex items-center justify-center hover:bg-white/30 transition-all active:scale-95 group/info" 
+                          [ngClass]="gridMode() === 'compact' ? 'h-7 w-7 sm:h-10 sm:w-10' : 'h-10 w-10'"
+                          title="Ver información y tiempos">
+                    <svg [ngClass]="gridMode() === 'compact' ? 'h-4 w-4 sm:h-6 sm:w-6' : 'h-6 w-6'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </button>
+                </div>
+
+                <div class="absolute bottom-2 left-3 sm:bottom-6 sm:left-6 text-white pr-2 sm:pr-6">
+                  <p class="font-bold opacity-80 uppercase tracking-tighter" [ngClass]="gridMode() === 'compact' ? 'text-[8px] sm:text-[11px]' : 'text-[11px]'">{{ park.location }}</p>
+                  <h3 class="font-bold line-clamp-1 truncate" [ngClass]="gridMode() === 'compact' ? 'text-sm sm:text-lg' : 'text-lg'" [title]="park.name">{{ park.name }}</h3>
+                </div>
+              </div>
+
+              <!-- Content -->
+              <div class="flex-1 flex flex-col" [ngClass]="gridMode() === 'compact' ? 'p-3 sm:p-8' : 'p-8'">
+                <p class="text-slate-600 leading-relaxed flex-1"
+                   [ngClass]="gridMode() === 'compact' ? 'text-[10px] sm:text-[13px] mb-3 sm:mb-8 line-clamp-2 sm:line-clamp-3' : 'text-[13px] mb-8 line-clamp-3'">
+                  {{ park.description }}
+                </p>
+
+                <!-- Status info -->
+                <div class="flex flex-col gap-1.5" [ngClass]="gridMode() === 'compact' ? 'mb-3 sm:mb-6' : 'mb-6'">
+                  <div class="flex items-center gap-2">
+                    <span class="relative flex h-2.5 w-2.5 items-center justify-center">
+                      @if (park.hasTodayData) {
+                        <span class="animate-ping absolute h-full w-full rounded-full opacity-75" [ngClass]="park.status === 'Abierto' ? 'bg-emerald-400' : 'bg-red-400'"></span>
+                        <span class="relative h-2 w-2 rounded-full shadow-sm" [ngClass]="park.status === 'Abierto' ? 'bg-emerald-500' : 'bg-red-500'"></span>
+                      } @else {
+                        <span class="relative h-2 w-2 rounded-full bg-slate-400 opacity-50"></span>
+                      }
+                    </span>
+                    <span class="font-black uppercase tracking-wider leading-none" [ngClass]="{
+                        'text-[8px] sm:text-[10px]': gridMode() === 'compact',
+                        'text-[10px]': gridMode() !== 'compact',
+                        'text-emerald-600': park.hasTodayData && park.status === 'Abierto',
+                        'text-red-500': park.hasTodayData && park.status === 'Cerrado',
+                        'text-slate-400': !park.hasTodayData
+                      }">
+                      {{ park.hasTodayData ? park.status : 'Sin información' }}
+                    </span>
+                  </div>
+                  <div class="flex items-center bg-slate-50 rounded-lg border border-slate-100"
+                       [ngClass]="gridMode() === 'compact' ? 'gap-1 px-1.5 py-0.5 sm:gap-1.5 sm:px-2 sm:py-1' : 'gap-1.5 px-2 py-1'">
+                    <svg class="text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                         [ngClass]="gridMode() === 'compact' ? 'h-2.5 w-2.5 sm:h-3 sm:w-3' : 'h-3 w-3'">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    <span class="font-black uppercase text-slate-500 line-clamp-1"
+                          [ngClass]="gridMode() === 'compact' ? 'text-[8px] sm:text-[10px]' : 'text-[10px]'">
+                      <span class="hidden sm:inline">Afluencia: </span>
+                      @if (!park.hasTodayData) {
+                        <span class="text-slate-400 italic">No disponible</span>
+                      } @else if (park.status === 'Cerrado') {
+                        <span class="text-red-500">PARQUE CERRADO</span>
+                      } @else {
+                        <span [ngClass]="{
+                            'text-emerald-500': park.crowds === 'Muy Baja',
+                            'text-emerald-400': park.crowds === 'Baja',
+                            'text-amber-500': park.crowds === 'Normal',
+                            'text-orange-500': park.crowds === 'Alta',
+                            'text-red-500': park.crowds === 'Muy Alta'
+                          }">{{ park.crowds }}</span>
+                      }
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Action button -->
+                <div class="mt-auto">
+                  <button 
+                    (click)="handleAction(park)"
+                    [ngClass]="[
+                      userParks().has(park.id) ? 'bg-emerald-500 hover:bg-red-500 text-white' : 'bg-slate-900 hover:bg-slate-800 text-white',
+                      gridMode() === 'compact' ? 'py-1.5 sm:py-2.5 rounded-lg sm:rounded-xl text-[10px] sm:text-sm' : 'py-2.5 rounded-xl text-sm'
+                    ]"
+                    class="cursor-pointer w-full flex items-center justify-center gap-1.5 sm:gap-2 font-bold transition-all shadow-md active:scale-95 group/btn"
+                  >
+                    @if (userParks().has(park.id)) {
+                      <svg class="h-4 w-4 group-hover/btn:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                      </svg>
+                      <svg class="h-4 w-4 hidden group-hover/btn:block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+                      </svg>
+                      <span class="group-hover/btn:hidden">Visitado</span>
+                      <span class="hidden group-hover/btn:block">Eliminar visita</span>
+                    } @else {
+                      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                      </svg>
+                      Registrar Visita
+                    }
+                  </button>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+
+        <!-- Load More Section -->
+        @if (hasMoreParks()) {
+          <div class="mt-12 text-center animate-fade-in-up pb-10">
+            <button (click)="loadMore()" [disabled]="isLoadingMore()" class="inline-flex cursor-pointer items-center gap-2 px-8 py-3.5 rounded-2xl bg-white border border-slate-200 text-slate-700 font-black text-[11px] uppercase tracking-widest hover:bg-slate-50 hover:text-blue-600 transition-all shadow-sm active:scale-95 group disabled:opacity-70 disabled:active:scale-100 disabled:cursor-not-allowed">
+              @if (isLoadingMore()) {
+                <div class="h-4 w-4 border-2 border-slate-300 border-t-blue-600 rounded-full animate-spin"></div>
+                Cargando...
+              } @else {
+                <svg class="h-4 w-4 text-slate-400 group-hover:text-blue-600 transition-colors animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
+                </svg>
+                Cargar más
+              }
+            </button>
+          </div>
+        }
+      } @else if (hasError()) {
+        <!-- Error Connection State -->
+        <div class="text-center py-20 bg-white rounded-3xl border border-dashed border-red-200 p-6 animate-fade-in max-w-lg mx-auto">
+          <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-red-50 text-red-500 mb-4 border border-red-100 shadow-inner">
+            <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-slate-900 mb-2">No se pudo cargar el listado de parques</h3>
+          <p class="text-slate-500 text-sm mb-6">
+            Ha ocurrido un problema de conexión con el servidor de parques y tiempos de espera.
+          </p>
+          <button (click)="fetchParks()" class="cursor-pointer inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-blue-600 text-white font-bold text-sm hover:bg-blue-500 transition-all shadow-lg shadow-blue-500/25 active:scale-95">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            <span>Reintentar conexión</span>
+          </button>
+        </div>
+      } @else {
+        <!-- Empty State -->
+        <div class="text-center py-24 bg-white rounded-[3rem] border-2 border-dashed border-slate-100">
+          <div class="inline-flex items-center justify-center h-20 w-20 rounded-3xl bg-slate-50 text-slate-300 mb-6 transition-transform hover:rotate-12 duration-500">
+            <svg class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.75 21L21 3.75m0 0V21m0-17.25H3.75" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-black text-slate-900">No encontramos resultados</h3>
+          <p class="text-slate-500 mt-2 max-w-xs mx-auto">Prueba a ajustar los filtros o cambia los términos de búsqueda.</p>
+          <button (click)="clearAllFilters()" class="cursor-pointer mt-8 rounded-2xl bg-blue-600 px-8 py-4 text-xs font-black uppercase tracking-widest text-white shadow-xl hover:scale-105 transition-all active:scale-95">
+            Limpiar Filtros
+          </button>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Add Confirmation Modal -->
+  @if (showAddConfirmModal()) {
+    <div appBlockScroll class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-md animate-fade-in px-4">
+      <div class="bg-white p-8 rounded-[2.5rem] shadow-2xl max-w-sm w-full text-center border border-slate-100 animate-slide-up relative overflow-hidden">
+        <button (click)="closeAddConfirm()" class="cursor-pointer absolute top-5 right-5 text-slate-400 hover:text-slate-600 transition-colors focus:outline-none">
+          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+        <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-blue-50 text-blue-600 mb-6 border border-blue-100 shadow-inner">
+          <svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+          </svg>
+        </div>
+        <h3 class="text-xl font-black text-slate-900 mb-2">¿Registrar visita?</h3>
+        <p class="text-slate-500 text-sm mb-8">
+          ¿Quieres añadir <span class="font-bold text-slate-700">{{ selectedParkAction()?.name }}</span> a tus parques visitados?
+        </p>
+        <div class="flex gap-3">
+          <button (click)="closeAddConfirm()" [disabled]="isSubmitting()" class="cursor-pointer flex-1 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-700 font-bold text-sm hover:bg-slate-100 transition-all disabled:opacity-50 disabled:cursor-not-allowed">Cancelar</button>
+          <button (click)="confirmAdd()" [disabled]="isSubmitting()" class="relative cursor-pointer flex-1 py-3 rounded-2xl bg-blue-600 text-white font-bold text-sm hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/25 active:scale-95 disabled:opacity-70 disabled:active:scale-100 disabled:cursor-not-allowed flex items-center justify-center">
+            <span [ngClass]="{'opacity-0': isSubmitting()}">Añadir</span>
+            @if (isSubmitting()) {
+              <div class="absolute inset-0 flex items-center justify-center">
+                <div class="h-5 w-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+              </div>
+            }
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Delete Confirmation Modal -->
+  @if (showDeleteConfirmModal()) {
+    <div appBlockScroll class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-md animate-fade-in px-4">
+      <div class="bg-white p-8 rounded-[2.5rem] shadow-2xl max-w-sm w-full text-center border border-slate-100 animate-slide-up relative overflow-hidden">
+        <button (click)="closeDeleteConfirm()" class="cursor-pointer absolute top-5 right-5 text-slate-400 hover:text-slate-600 transition-colors focus:outline-none">
+          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+        <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-red-50 text-red-500 mb-6 border border-red-100 shadow-inner">
+          <svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+          </svg>
+        </div>
+        <h3 class="text-xl font-black text-slate-900 mb-2">¿Eliminar visita?</h3>
+        <p class="text-slate-500 text-sm mb-8">
+          ¿Estás seguro de eliminar <span class="font-bold text-slate-700">{{ selectedParkAction()?.name }}</span> de tus parques visitados?
+        </p>
+        <div class="flex gap-3">
+          <button (click)="closeDeleteConfirm()" class="cursor-pointer flex-1 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-700 font-bold text-sm hover:bg-slate-100 transition-all">Cancelar</button>
+          <button (click)="confirmDelete()" class="cursor-pointer flex-1 py-3 rounded-2xl bg-red-500 text-white font-bold text-sm hover:bg-red-600 transition-all shadow-lg shadow-red-500/25 active:scale-95">
+            Eliminar
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Add Success Modal -->
+  @if (showSuccessModal()) {
+    <div appBlockScroll class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm animate-fade-in">
+      <div class="bg-white p-8 rounded-3xl shadow-2xl max-w-sm w-full mx-4 text-center border border-slate-100 animate-slide-up relative overflow-hidden">
+        <button (click)="closeAddSuccess()" class="cursor-pointer absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition-colors focus:outline-none">
+          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+        <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 mb-6 shadow-inner border border-emerald-50">
+          <svg class="h-8 w-8 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
+        </div>
+        <h3 class="text-xl font-black text-slate-900 mb-2">¡Añadido Correctamente!</h3>
+        <p class="text-slate-500 font-medium text-sm">
+          <span class="font-extrabold text-slate-800">{{ selectedParkAction()?.name }}</span> se ha registrado en tus parques visitados con éxito.
+        </p>
+        <button (click)="closeAddSuccess()" class="cursor-pointer mt-6 w-full rounded-2xl bg-emerald-600 py-3.5 text-sm font-bold text-white hover:bg-emerald-500 shadow-lg shadow-emerald-500/20 active:scale-95 transition-all focus:outline-none">Aceptar</button>
+        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-4">
+          Cerrando en {{ countdown() }}s...
+        </p>
+        <div class="absolute bottom-0 left-0 h-1 bg-emerald-500 animate-progress-shrink"></div>
+      </div>
+    </div>
+  }
+
+  <!-- Delete Success Modal -->
+  @if (showDeleteSuccessModal()) {
+    <div appBlockScroll class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm animate-fade-in">
+      <div class="bg-white p-8 rounded-3xl shadow-2xl max-w-sm w-full mx-4 text-center border border-slate-100 animate-slide-up relative overflow-hidden">
+        <button (click)="closeDeleteSuccess()" class="cursor-pointer absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition-colors focus:outline-none">
+          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+        <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-red-100 mb-6 shadow-inner border border-red-50">
+          <svg class="h-8 w-8 text-red-600" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+          </svg>
+        </div>
+        <h3 class="text-xl font-black text-slate-900 mb-2">¡Eliminado Correctamente!</h3>
+        <p class="text-slate-500 font-medium text-sm">
+          <span class="font-extrabold text-slate-800">{{ selectedParkAction()?.name }}</span> se ha eliminado de tus parques visitados con éxito.
+        </p>
+        <button (click)="closeDeleteSuccess()" class="cursor-pointer mt-6 w-full rounded-2xl bg-red-600 py-3.5 text-sm font-bold text-white hover:bg-red-500 shadow-lg shadow-red-500/20 active:scale-95 transition-all focus:outline-none">Aceptar</button>
+        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-4">
+          Cerrando en {{ countdown() }}s...
+        </p>
+        <div class="absolute bottom-0 left-0 h-1 bg-red-500 animate-progress-shrink"></div>
+      </div>
+    </div>
+  }
+
+  <!-- Login Prompt Modal -->
+  @if (showLoginPromptModal()) {
+    <div appBlockScroll class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm animate-fade-in">
+      <div class="bg-white p-8 rounded-3xl shadow-2xl max-w-sm w-full mx-4 text-center border border-slate-100 animate-slide-up relative">
+        <button (click)="showLoginPromptModal.set(false)" class="cursor-pointer absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition-colors focus:outline-none">
+          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+        <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-blue-100 mb-6 shadow-inner border border-blue-50">
+          <svg class="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+          </svg>
+        </div>
+        <h3 class="text-xl font-black text-slate-900 mb-2">¡Acceso Requerido!</h3>
+        <p class="text-slate-500 font-medium mb-8">Debes iniciar sesión o registrarte para poder guardar parques en tu perfil.</p>
+        <div class="flex flex-col gap-3">
+          <button (click)="router.navigate(['/login'])" class="cursor-pointer w-full rounded-2xl bg-blue-600 py-3.5 text-sm font-bold text-white hover:bg-blue-500 shadow-lg shadow-blue-500/20 active:scale-95 transition-all focus:outline-none">Iniciar Sesión</button>
+          <button (click)="router.navigate(['/register'])" class="cursor-pointer w-full rounded-2xl bg-slate-50 py-3.5 text-sm font-bold text-slate-700 hover:bg-slate-100 active:scale-95 transition-all focus:outline-none border border-slate-200">Registrarse</button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Park Details Modal -->
+  @if (selectedPark()) {
+    <div (click)="closeParkDetails()" class="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-900/60 backdrop-blur-md animate-fade-in p-4 sm:p-6 overflow-y-auto cursor-pointer">
+      <div (click)="$event.stopPropagation()" class="bg-white rounded-[2.5rem] shadow-2xl max-w-xl w-full max-h-[85dvh] overflow-hidden flex flex-col border border-slate-100 animate-slide-up relative my-auto cursor-default">
+        <!-- Close Button -->
+        <button (click)="closeParkDetails()" class="cursor-pointer absolute top-6 right-6 z-10 h-10 w-10 rounded-full bg-slate-100/80 backdrop-blur-md flex items-center justify-center text-slate-500 hover:text-slate-900 hover:bg-white transition-all shadow-sm">
+          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+
+        <!-- Modal Header -->
+        <div class="relative h-48 overflow-hidden flex-shrink-0 text-white">
+          <img 
+            [src]="selectedPark()?.image" 
+            [alt]="selectedPark()?.name" 
+            (error)="modalParkImg.src='https://images.unsplash.com/photo-1513889961551-628c1e5e2ee9?auto=format&fit=crop&q=80&w=800'"
+            #modalParkImg
+            class="w-full h-full object-cover">
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent"></div>
+          <div class="absolute bottom-6 left-8">
+            <p class="text-xs font-black text-blue-200 uppercase tracking-[0.2em] mb-1">{{ selectedPark()?.country }}</p>
+            <h2 class="text-3xl font-black leading-tight">{{ selectedPark()?.name }}</h2>
+          </div>
+        </div>
+
+        <!-- Search and Sort inside Modal -->
+        @if (!isLoadingQueue() && parkQueueTimes()) {
+          <div class="px-8 pt-6 pb-2 flex items-center gap-3">
+            <div class="relative flex-1">
+              <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
+              <input 
+                type="text" 
+                [ngModel]="rideSearchQuery()"
+                (ngModelChange)="updateRideSearch($event)"
+                placeholder="Buscar por nombre de atracción o zona..."
+                class="block w-full rounded-2xl border-0 py-3 pl-11 pr-4 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-100 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 bg-slate-50/50 transition-all sm:text-sm"
+              >
+            </div>
+
+            <!-- Sort Toggle Button -->
+            <button 
+              (click)="toggleRideSort()"
+              class="cursor-pointer h-12 w-12 rounded-2xl bg-white border border-slate-100 shadow-sm flex items-center justify-center text-slate-500 hover:text-blue-600 hover:border-blue-100 transition-all active:scale-95 group/sort flex-shrink-0"
+              [title]="rideSortOrder() === 'desc' ? 'Ordenar por menor tiempo primero' : 'Ordenar por mayor tiempo primero'"
+            >
+              @if (rideSortOrder() === 'desc') {
+                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
+                </svg>
+              } @else {
+                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h9m5-1v12m0 0l-4-4m4 4l4-4" />
+                </svg>
+              }
+            </button>
+          </div>
+        }
+
+        <!-- Modal Content -->
+        <div #rideListContainer class="flex-1 overflow-y-auto px-8 pb-8 pt-6 overscroll-contain">
+          @if (isLoadingQueue()) {
+            <div class="flex flex-col items-center justify-center py-20 space-y-4">
+              <div class="h-12 w-12 border-4 border-slate-100 border-t-blue-600 rounded-full animate-spin"></div>
+              <p class="text-slate-400 font-bold text-sm tracking-widest uppercase">Consultando tiempos reales...</p>
+            </div>
+          } @else if (parkQueueTimes()) {
+            <div class="space-y-8">
+              <!-- Grid de Atracciones -->
+              <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                  <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                    <span class="h-1 w-8 bg-blue-600 rounded-full"></span>
+                    Estado actual de las atracciones
+                  </h3>
+                  <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                    {{ sortedRides().length }} {{ sortedRides().length === 1 ? 'Atracción' : 'Atracciones' }}
+                  </span>
+                </div>
+
+                <div class="grid grid-cols-1 gap-3">
+                  @for (ride of sortedRides(); track ride.id) {
+                    <div class="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100 hover:border-slate-200 transition-colors">
+                      <div class="flex items-center gap-4">
+                        <div class="h-2 w-2 rounded-full" [ngClass]="ride.is_open ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]' : 'bg-red-500'"></div>
+                        <div class="flex flex-col">
+                          <span class="font-bold text-slate-700 leading-tight mb-0.5">{{ ride.name }}</span>
+                          @if (ride.landName) {
+                            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-tighter">{{ ride.landName }}</span>
+                          }
+                        </div>
+                      </div>
+                      
+                      @if (ride.is_open) {
+                        <div class="flex items-center gap-2">
+                          <span class="text-2xl font-black text-slate-900 leading-none">{{ ride.wait_time }}</span>
+                          <span class="text-[10px] font-black text-slate-400 uppercase tracking-tighter">min</span>
+                        </div>
+                      } @else {
+                        <span class="text-[10px] font-black text-red-500 uppercase tracking-widest bg-red-50 px-3 py-1 rounded-lg border border-red-100 italic">Cerrada</span>
+                      }
+                    </div>
+                  } @empty {
+                    <div class="text-center py-10 bg-slate-50 rounded-3xl border border-dashed border-slate-200">
+                      <p class="text-slate-400 font-bold text-sm">No se encontraron atracciones que coincidan con "{{ rideSearchQuery() }}"</p>
+                    </div>
+                  }
+                </div>
+              </div>
+            </div>
+          } @else {
+            <div class="text-center py-20 bg-slate-50 rounded-3xl border border-dashed border-slate-200">
+              <p class="text-slate-400 font-bold">No hay datos de tiempo disponibles para este parque ahora mismo.</p>
+            </div>
+          }
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="p-6 bg-slate-50/50 border-t border-slate-100 flex flex-col gap-4 flex-shrink-0">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div class="flex items-center gap-2">
+              <svg class="h-4 w-4 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+              <span class="text-xs font-bold text-slate-500">Datos actualizados en tiempo real</span>
+            </div>
+            <button (click)="closeParkDetails()" class="cursor-pointer px-8 py-3 bg-slate-900 text-white rounded-xl text-sm font-black hover:bg-slate-800 transition-all active:scale-95 shadow-md">Entendido</button>
+          </div>
+          <p class="text-[9px] text-slate-400 font-black uppercase tracking-widest text-center sm:text-left border-t border-slate-100 pt-4">
+            * Estimaciones externas sujetas a cambios de operativa del parque.
+          </p>
+        </div>
+      </div>
+    </div>
+  }
+  <!-- Botón Volver Arriba -->
+  @if (showScrollTop()) {
+    <button 
+      (click)="scrollToTop()" 
+      class="fixed bottom-6 right-6 sm:bottom-8 sm:right-8 z-[100] flex items-center justify-center w-12 h-12 rounded-full bg-white/90 backdrop-blur-md border border-slate-200/50 text-slate-500 shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:-translate-y-1 hover:shadow-[0_8px_30px_rgb(0,0,0,0.2)] hover:text-blue-600 transition-all duration-300 animate-in fade-in zoom-in group"
+      title="Volver arriba"
+    >
+      <svg class="w-5 h-5 group-hover:-translate-y-0.5 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 15l7-7 7 7" />
+      </svg>
+    </button>
+  }
+</main>

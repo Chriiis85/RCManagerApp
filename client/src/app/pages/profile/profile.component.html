@@ -1,0 +1,1191 @@
+<main class="min-h-screen bg-slate-50 pt-24 pb-20 px-4 sm:px-6 lg:px-8 animate-fade-in-up">
+  <div class="max-w-7xl mx-auto space-y-8">
+    
+    <!-- Header Page -->
+    <div class="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-slate-100 flex items-center justify-between">
+      <div>
+        <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Mi Cuenta</h1>
+        <p class="text-slate-500 mt-1">Gestiona tu perfil, seguridad y el resumen de tus aventuras.</p>
+      </div>
+    </div>
+
+    @if (isLoading()) {
+      <!-- Skeleton Loader -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-pulse">
+        <!-- Left column skeleton -->
+        <div class="space-y-6">
+          <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 flex flex-col items-center gap-4">
+            <div class="w-32 h-32 rounded-full bg-slate-200"></div>
+            <div class="h-5 w-36 bg-slate-200 rounded-xl"></div>
+            <div class="h-4 w-24 bg-slate-100 rounded-xl"></div>
+            <div class="w-full h-10 bg-slate-100 rounded-2xl"></div>
+          </div>
+          <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 space-y-4">
+            <div class="h-5 w-32 bg-slate-200 rounded-xl"></div>
+            <div class="h-10 w-full bg-slate-100 rounded-2xl"></div>
+            <div class="h-10 w-full bg-slate-100 rounded-2xl"></div>
+          </div>
+        </div>
+
+        <!-- Right column skeleton -->
+        <div class="lg:col-span-2 space-y-6">
+          <!-- Stats skeleton -->
+          <div class="grid grid-cols-3 gap-4">
+            <div class="bg-slate-200 h-32 rounded-3xl"></div>
+            <div class="bg-slate-100 h-32 rounded-3xl"></div>
+            <div class="bg-slate-100 h-32 rounded-3xl"></div>
+          </div>
+          <!-- List skeletons -->
+          <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 space-y-4">
+            <div class="h-5 w-28 bg-slate-200 rounded-xl"></div>
+            @for (i of [1,2,3]; track i) {
+              <div class="flex items-center gap-4 p-3 rounded-2xl border border-slate-100">
+                <div class="w-10 h-10 rounded-xl bg-slate-200 flex-shrink-0"></div>
+                <div class="flex-1 space-y-2">
+                  <div class="h-4 w-3/4 bg-slate-200 rounded-lg"></div>
+                  <div class="h-3 w-1/2 bg-slate-100 rounded-lg"></div>
+                </div>
+              </div>
+            }
+          </div>
+          <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 space-y-4">
+            <div class="h-5 w-40 bg-slate-200 rounded-xl"></div>
+            @for (i of [1,2,3]; track i) {
+              <div class="flex items-center gap-4 p-3 rounded-2xl border border-slate-100">
+                <div class="w-10 h-10 rounded-xl bg-slate-200 flex-shrink-0"></div>
+                <div class="flex-1 space-y-2">
+                  <div class="h-4 w-3/4 bg-slate-200 rounded-lg"></div>
+                  <div class="h-3 w-1/2 bg-slate-100 rounded-lg"></div>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    } @else {
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      
+      <!-- Left Column: User Info & Security -->
+      <div class="space-y-8">
+        <!-- User Profile Card -->
+        <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 relative text-center flex flex-col items-center">
+          <!-- Profile Avatar Editor -->
+          <div class="relative inline-block mb-6 group cursor-pointer" title="Cambiar foto de perfil" (click)="changeAvatar()">
+            <img [src]="userInfo().avatar" alt="User Avatar" class="w-32 h-32 rounded-full object-cover border-4 border-white shadow-md mx-auto">
+            <!-- Edit Overlay -->
+            <div class="absolute inset-0 bg-slate-900/40 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+              <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </div>
+            <!-- Edit Icon Badge -->
+            <div class="absolute bottom-1 right-1 bg-blue-600 text-white p-1.5 rounded-full shadow-lg border-2 border-white">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+            </div>
+          </div>
+          
+          <h2 class="text-2xl font-bold text-slate-900 mb-1">{{ userInfo().firstName }} {{ userInfo().lastName }}</h2>
+          <p class="text-blue-600 font-bold mb-3 tracking-wide">&#64;{{ userInfo().username }}</p>
+          
+          <div class="w-full pt-4 mt-3 border-t border-slate-100 flex flex-col gap-4">
+            <div class="flex items-center justify-center gap-2 cursor-pointer group">
+              <svg class="h-5 w-5 text-slate-400 group-hover:text-blue-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+              <span class="text-sm font-medium text-slate-500 group-hover:text-blue-600 transition-colors">{{ userInfo().email }}</span>
+            </div>
+            
+            <button (click)="openEditProfile()" class="cursor-pointer w-full flex items-center justify-center gap-2 rounded-xl bg-blue-50 py-2.5 text-sm font-bold text-blue-700 hover:bg-blue-100 transition-all active:scale-95 ring-1 ring-inset ring-blue-700/10">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+              Editar Datos Personales
+            </button>
+          </div>
+        </div>
+
+        <!-- Security Card -->
+        <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
+          <h3 class="text-lg font-bold text-slate-900 mb-2 flex items-center gap-2">
+            <svg class="w-6 h-6 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+            Seguridad
+          </h3>
+          <p class="text-sm text-slate-500 mb-6">Protege tu cuenta activando opciones de seguridad avanzadas.</p>
+          
+          <div class="space-y-4">
+            <!-- 2-Step Verification Toggle -->
+            <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+              <div>
+                <div class="flex items-center gap-2">
+                  <p class="text-sm font-bold text-slate-900">Verificación 2 Pasos</p>
+                  @if (isTwoFactorEnabled()) {
+                    <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                      {{ current2FAType() === 'EMAIL' ? '✉️ Correo' : '📱 App QR' }}
+                    </span>
+                  }
+                </div>
+                <p class="text-[11px] text-slate-500 mt-0.5 max-w-[150px] leading-tight flex-wrap">
+                  {{ isTwoFactorEnabled() ? 'Protegido con código en cada login.' : 'Seguridad extra por email o App QR.' }}
+                </p>
+              </div>
+              <button 
+                (click)="toggleTwoFactor()" 
+                [class]="'cursor-pointer relative inline-flex h-6 w-11 flex-shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ' + (isTwoFactorEnabled() ? 'bg-emerald-500' : 'bg-slate-200')"
+                role="switch" 
+                [attr.aria-checked]="isTwoFactorEnabled()">
+                <span class="sr-only">Habilitar verificación en dos pasos</span>
+                <span 
+                  [class]="'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ' + (isTwoFactorEnabled() ? 'translate-x-5' : 'translate-x-0')">
+                </span>
+              </button>
+            </div>
+            
+            <button (click)="openPasswordModal()" class="cursor-pointer w-full flex items-center justify-center gap-2 rounded-xl bg-slate-50 border border-slate-200 py-3 text-sm font-bold text-slate-700 hover:bg-slate-100 hover:border-slate-300 transition-all active:scale-95 shadow-sm">
+              <svg class="w-4 h-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
+              Establecer / Cambiar Contraseña
+            </button>
+            <p class="text-[11px] text-slate-400 text-center leading-tight">
+              Si entraste con Google, crea aquí una contraseña para iniciar sesión también con correo.
+            </p>
+          </div>
+        </div>
+
+        <!-- Friends Card -->
+        <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
+          <div class="flex items-center justify-between mb-6">
+            <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+              <span class="text-xl">🤝</span> Amigos
+            </h3>
+            <button (click)="showAddFriendModal.set(true)" class="cursor-pointer text-xs font-bold bg-blue-50 text-blue-600 px-3 py-1.5 rounded-lg hover:bg-blue-100 transition-colors border border-blue-100">
+              + Añadir
+            </button>
+          </div>
+
+          <!-- Pending Incoming -->
+          @if (pendingIncoming.length > 0) {
+            <div class="mb-6">
+              <p class="text-[10px] font-bold text-slate-400 mb-2 uppercase tracking-wider">Solicitudes Recibidas</p>
+              <div class="space-y-3">
+                @for (req of pendingIncoming; track req.id) {
+                  <div class="flex items-center justify-between p-3 rounded-2xl bg-amber-50 border border-amber-100/50">
+                    <div class="flex items-center gap-3">
+                      <img [src]="getFriendAvatar(req)" class="w-10 h-10 rounded-full border-2 border-white shadow-sm">
+                      <div>
+                        <p class="text-sm font-bold text-slate-900">&#64;{{ getFriendUsername(req) }}</p>
+                        <p class="text-[10px] text-amber-600 font-bold">Quiere ser tu amigo</p>
+                      </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <button (click)="acceptFriend(req)" class="cursor-pointer bg-emerald-500 text-white p-2 rounded-xl hover:bg-emerald-600 transition-colors shadow-sm"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg></button>
+                      <button (click)="rejectFriend(req)" class="cursor-pointer bg-white border border-red-200 text-red-500 p-2 rounded-xl hover:bg-red-50 transition-colors shadow-sm"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg></button>
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+
+          <!-- Pending Outgoing -->
+          @if (pendingOutgoing.length > 0) {
+            <div class="mb-6">
+              <p class="text-[10px] font-bold text-slate-400 mb-2 uppercase tracking-wider">Solicitudes Enviadas</p>
+              <div class="space-y-3">
+                @for (req of pendingOutgoing; track req.id) {
+                  <div class="flex items-center justify-between p-3 rounded-2xl bg-slate-50 border border-slate-100">
+                    <div class="flex items-center gap-3">
+                      <img [src]="getFriendAvatar(req)" class="w-10 h-10 rounded-full border-2 border-white shadow-sm opacity-60 grayscale">
+                      <div>
+                        <p class="text-sm font-bold text-slate-600">&#64;{{ getFriendUsername(req) }}</p>
+                        <p class="text-[10px] text-slate-400 font-bold">Pendiente de respuesta...</p>
+                      </div>
+                    </div>
+                    <button (click)="removeFriend(req)" class="cursor-pointer text-slate-400 hover:text-red-500 transition-colors p-1.5 bg-white border border-slate-200 rounded-lg" title="Cancelar solicitud">
+                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+
+          <!-- My Friends -->
+          <div>
+            <p class="text-[10px] font-bold text-slate-400 mb-2 uppercase tracking-wider">Mis Amigos ({{ myFriends.length }})</p>
+            @if (myFriends.length === 0) {
+              <div class="text-center py-6 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
+                <p class="text-slate-400 font-bold text-sm">Aún no tienes amigos añadidos.</p>
+              </div>
+            } @else {
+              <div class="space-y-3 max-h-[300px] overflow-y-auto pr-2">
+                @for (req of myFriends; track req.id) {
+                  <div class="flex items-center justify-between p-3 rounded-2xl border border-slate-100 hover:bg-slate-50 transition-colors group">
+                    <div class="flex items-center gap-3">
+                      <img [src]="getFriendAvatar(req)" class="w-10 h-10 rounded-full border-2 border-white shadow-sm">
+                      <p class="text-sm font-bold text-slate-900">&#64;{{ getFriendUsername(req) }}</p>
+                    </div>
+                    <button (click)="removeFriend(req)" class="cursor-pointer text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all p-1.5" title="Eliminar amigo">
+                      <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                    </button>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Legal & Privacy Card -->
+        <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 space-y-4">
+          <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+            <span class="text-xl">⚖️</span> Privacidad y Legal
+          </h3>
+          <p class="text-xs text-slate-500 leading-relaxed">
+            Consulta los acuerdos legales y gestiona tus derechos de protección de datos (RGPD).
+          </p>
+
+          <div class="space-y-2 pt-2 border-t border-slate-100 text-xs font-semibold">
+            <a routerLink="/terminos" class="flex items-center justify-between p-2.5 rounded-xl hover:bg-slate-50 text-slate-700 hover:text-blue-600 transition-colors">
+              <span>📜 Términos de Servicio</span>
+              <svg class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            </a>
+            <a routerLink="/privacidad" class="flex items-center justify-between p-2.5 rounded-xl hover:bg-slate-50 text-slate-700 hover:text-blue-600 transition-colors">
+              <span>🔒 Política de Privacidad</span>
+              <svg class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            </a>
+            <a routerLink="/cookies" class="flex items-center justify-between p-2.5 rounded-xl hover:bg-slate-50 text-slate-700 hover:text-blue-600 transition-colors">
+              <span>🍪 Política de Cookies</span>
+              <svg class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            </a>
+            <a routerLink="/aviso-legal" class="flex items-center justify-between p-2.5 rounded-xl hover:bg-slate-50 text-slate-700 hover:text-blue-600 transition-colors">
+              <span>⚖️ Aviso Legal</span>
+              <svg class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+
+          <!-- Account Erasure / Privacy rights notice -->
+          <div class="pt-3 border-t border-slate-100">
+            <a href="mailto:rcmanager.support@gmail.com?subject=Solicitud de Eliminación de Cuenta RCManager" class="w-full flex items-center justify-center gap-1.5 p-2.5 rounded-xl text-xs font-bold text-red-600 bg-red-50 hover:bg-red-100 transition-colors">
+              <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+              <span>Solicitar Eliminación de Cuenta</span>
+            </a>
+            <p class="text-[10px] text-slate-400 text-center mt-1 leading-tight">
+              Cumplimiento Directiva Apple 5.1.1(v) y RGPD.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Stats, Lists -->
+      <div class="lg:col-span-2 space-y-8">
+        
+        <!-- Summary Stats (Top Grid) -->
+        <div class="grid grid-cols-3 gap-3 sm:gap-6">
+           <!-- Credits -->
+           <div class="bg-blue-600 p-4 sm:p-6 rounded-2xl sm:rounded-3xl shadow-md border border-blue-500 text-white flex flex-col justify-between cursor-pointer hover:bg-blue-700 transition-colors">
+             <div class="flex flex-col sm:flex-row justify-between items-start mb-2 sm:mb-4 gap-1.5 sm:gap-2">
+                <span class="bg-white/20 p-1.5 sm:p-2 rounded-lg sm:rounded-xl order-first sm:order-last"><svg class="w-4 h-4 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></span>
+                <span class="text-blue-100 font-semibold tracking-wider text-[9px] sm:text-sm uppercase leading-tight">Mis Credits</span>
+             </div>
+             <p class="text-xl sm:text-4xl font-black mt-auto">{{ stats().credits }}</p>
+           </div>
+           
+           <!-- Parks -->
+           <div class="bg-white p-4 sm:p-6 rounded-2xl sm:rounded-3xl shadow-sm border border-slate-100 flex flex-col justify-between cursor-pointer hover:border-slate-300 transition-colors">
+              <div class="flex flex-col sm:flex-row justify-between items-start mb-2 sm:mb-4 gap-1.5 sm:gap-2">
+                <span class="bg-emerald-100 text-emerald-600 p-1.5 sm:p-2 rounded-lg sm:rounded-xl order-first sm:order-last"><svg class="w-4 h-4 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></span>
+                <span class="text-slate-500 font-semibold tracking-wider text-[9px] sm:text-sm uppercase leading-tight">Parques Visitados</span>
+              </div>
+              <p class="text-xl sm:text-4xl font-black text-slate-900 mt-auto">{{ stats().parks }}</p>
+           </div>
+
+           <!-- Attractions -->
+           <div class="bg-white p-4 sm:p-6 rounded-2xl sm:rounded-3xl shadow-sm border border-slate-100 flex flex-col justify-between cursor-pointer hover:border-slate-300 transition-colors">
+              <div class="flex flex-col sm:flex-row justify-between items-start mb-2 sm:mb-4 gap-1.5 sm:gap-2">
+                <span class="bg-rose-100 text-rose-600 p-1.5 sm:p-2 rounded-lg sm:rounded-xl order-first sm:order-last"><svg class="w-4 h-4 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></span>
+                <span class="text-slate-500 font-semibold tracking-wider text-[9px] sm:text-sm uppercase leading-tight">Atracciones</span>
+              </div>
+              <p class="text-xl sm:text-4xl font-black text-slate-900 mt-auto">{{ stats().attractions }}</p>
+           </div>
+        </div>
+
+        <!-- ── MIS CREDITS ──────────────────────────────────────────── -->
+        <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
+          <div routerLink="/mis-credits" class="flex items-center justify-between mb-6 cursor-pointer group">
+            <h3 class="text-xl font-bold text-slate-900 flex items-center gap-2 group-hover:text-blue-600 transition-colors">
+              <span class="text-2xl">🎢</span> Mis Credits
+            </h3>
+            <span class="text-sm font-bold text-blue-600 group-hover:text-blue-700 transition-colors">Ver todos ({{ creditsList().length }})</span>
+          </div>
+          @if (creditsList().length === 0) {
+            <div class="text-center py-10 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
+              <p class="text-slate-400 font-bold text-sm">Aún no has añadido ningún credit.</p>
+              <a routerLink="/credits" class="inline-block mt-3 text-sm font-bold text-blue-600 hover:underline">¡Añade tu primera montaña rusa!</a>
+            </div>
+          } @else {
+            <div class="space-y-3">
+              @for (item of creditsList().slice(0, 3); track item.id) {
+                <div class="flex items-center justify-between gap-3 p-3 border border-slate-100 rounded-2xl hover:bg-slate-50 transition-colors group">
+                  <div class="flex items-center gap-3 min-w-0">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-slate-200 dark:bg-slate-700 overflow-hidden relative shadow-sm">
+                      <img [src]="item.coaster?.imageUrl || 'https://images.unsplash.com/photo-1513889961551-628c1e5e2ee9?auto=format&fit=crop&q=80&w=200&id=' + item.coasterId" 
+                           (error)="creditPreviewImg.src='https://images.unsplash.com/photo-1513889961551-628c1e5e2ee9?auto=format&fit=crop&q=80&w=200'"
+                           #creditPreviewImg
+                           loading="lazy"
+                           decoding="async"
+                           class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <p class="font-bold text-slate-900 text-sm truncate">{{ item.coaster?.name || 'Montaña Rusa #' + item.coasterId }}</p>
+                      <p class="text-xs text-slate-400 truncate">{{ item.coaster?.park?.name || '' }}</p>
+                    </div>
+                  </div>
+                  
+                  @if (item.rating) {
+                    <div class="flex-shrink-0">
+                      <span class="text-xs font-black text-blue-600 px-2 py-1 bg-blue-50 rounded-lg">{{ item.rating }} <span class="text-[10px] text-blue-400 uppercase">veces</span></span>
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- ── ATRACCIONES VISITADAS ────────────────────────────────── -->
+        <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
+          <div routerLink="/mis-atracciones" class="flex items-center justify-between mb-6 cursor-pointer group">
+            <h3 class="text-xl font-bold text-slate-900 flex items-center gap-2 group-hover:text-purple-600 transition-colors">
+              <span class="text-2xl">🎡</span> Atracciones Visitadas
+            </h3>
+            <span class="text-sm font-bold text-purple-600 group-hover:text-purple-700 transition-colors">Ver todas ({{ attractionsList().length }})</span>
+          </div>
+          @if (attractionsList().length === 0) {
+            <div class="text-center py-10 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
+              <p class="text-slate-400 font-bold text-sm">Aún no has registrado ninguna atracción.</p>
+              <a routerLink="/atracciones" class="inline-block mt-3 text-sm font-bold text-purple-600 hover:underline">¡Registra tu primera visita!</a>
+            </div>
+          } @else {
+            <div class="space-y-3">
+              @for (item of attractionsList().slice(0, 3); track item.id) {
+                <div class="flex items-center justify-between gap-3 p-3 border border-slate-100 rounded-2xl hover:bg-slate-50 transition-colors group">
+                  <div class="flex items-center gap-3 min-w-0">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-slate-200 dark:bg-slate-700 overflow-hidden relative shadow-sm">
+                      <img [src]="item.attraction?.imageUrl || 'https://images.unsplash.com/photo-1513889961551-628c1e5e2ee9?auto=format&fit=crop&q=80&w=200&id=' + item.attractionId" 
+                           (error)="attrPreviewImg.src='https://images.unsplash.com/photo-1513889961551-628c1e5e2ee9?auto=format&fit=crop&q=80&w=200'"
+                           #attrPreviewImg
+                           loading="lazy"
+                           decoding="async"
+                           class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <p class="font-bold text-slate-900 text-sm truncate">{{ item.attraction?.name || 'Atracción #' + item.attractionId }}</p>
+                      <p class="text-xs text-slate-400 truncate">{{ item.attraction?.park?.name || '' }}</p>
+                    </div>
+                  </div>
+                  
+                  @if (item.rating) {
+                    <div class="flex-shrink-0">
+                      <span class="text-xs font-black text-purple-600 px-2 py-1 bg-purple-50 rounded-lg">{{ item.rating }} <span class="text-[10px] text-purple-400 uppercase">veces</span></span>
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- ── PARQUES VISITADOS ───────────────────────────────────── -->
+        <div class="bg-[#0d1b3e] p-8 rounded-3xl shadow-lg border border-blue-900/40 relative overflow-hidden">
+          <div class="absolute inset-0 opacity-5" style="background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M54.627 0l1.373 1.373v57.254l-1.373 1.373H5.373L4 58.627V1.373L5.373 0h49.254z\' fill=\'%23ffffff\' fill-rule=\'evenodd\'/%3E%3C/svg%3E');"></div>
+          <div class="relative z-10">
+            <div routerLink="/mis-parques" class="flex items-center justify-between mb-6 cursor-pointer group">
+              <h3 class="text-xl font-bold text-white flex items-center gap-2 group-hover:text-blue-300 transition-colors">
+                <span class="text-2xl">🏞️</span> Parques Visitados
+              </h3>
+              <span class="text-sm font-bold text-blue-300 group-hover:text-white transition-colors">Ver todos ({{ parksList().length }})</span>
+            </div>
+            @if (parksList().length === 0) {
+              <div class="text-center py-10 bg-white/5 rounded-2xl border border-dashed border-white/20">
+                <p class="text-blue-200 font-bold text-sm">Aún no has visitado ningún parque.</p>
+                <a routerLink="/parques" class="inline-block mt-3 text-sm font-bold text-blue-400 hover:underline">Explorar Parques</a>
+              </div>
+            } @else {
+              <div class="space-y-3">
+                @for (item of parksList().slice(0, 3); track item.id) {
+                  <div class="flex items-center justify-between gap-3 p-3 bg-white/10 backdrop-blur-sm border border-white/10 rounded-2xl hover:bg-white/20 transition-all group">
+                    <div class="flex items-center gap-3 min-w-0">
+                      <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-emerald-500/20 overflow-hidden relative shadow-sm">
+                        <img [src]="item.park?.imageUrl || 'https://images.unsplash.com/photo-1513889961551-628c1e5e2ee9?auto=format&fit=crop&q=80&w=200&id=' + item.parkId" 
+                             (error)="parkImg.src='https://images.unsplash.com/photo-1513889961551-628c1e5e2ee9?auto=format&fit=crop&q=80&w=200'"
+                             #parkImg
+                             loading="lazy"
+                             decoding="async"
+                             class="w-full h-full object-cover">
+                      </div>
+                      <div class="flex-1 min-w-0 text-left">
+                        <p class="font-bold text-white text-sm truncate">{{ item.park?.name || 'Parque #' + item.parkId }}</p>
+                        <p class="text-xs text-blue-300 truncate">{{ item.park?.country || '' }}</p>
+                      </div>
+                    </div>
+                    
+                    @if (item.rating) {
+                      <div class="flex-shrink-0">
+                        <span class="text-xs font-black text-emerald-400 px-2 py-1 bg-emerald-500/20 rounded-lg">{{ item.rating }} <span class="text-[10px] text-emerald-600 uppercase">veces</span></span>
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        </div>
+
+      </div>
+    </div>
+    }
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════ -->
+  <!-- MODAL: Confirmar eliminación                                       -->
+  <!-- ══════════════════════════════════════════════════════════════════ -->
+  @if (showDeleteConfirmModal()) {
+    <div appBlockScroll class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-md animate-fade-in px-4">
+      <div class="bg-white p-8 rounded-[2.5rem] shadow-2xl max-w-sm w-full text-center border border-slate-100 animate-slide-up relative overflow-hidden">
+        <button (click)="showDeleteConfirmModal.set(false)" class="cursor-pointer absolute top-5 right-5 text-slate-400 hover:text-slate-600 transition-colors focus:outline-none">
+          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+        <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-red-50 text-red-500 mb-6 border border-red-100 shadow-inner">
+          <svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+          </svg>
+        </div>
+        <h3 class="text-xl font-black text-slate-900 mb-2">
+          @if (selectedItemType() === 'credit') { ¿Eliminar credit? }
+          @if (selectedItemType() === 'attraction') { ¿Eliminar atracción? }
+          @if (selectedItemType() === 'park') { ¿Eliminar parque? }
+        </h3>
+        <p class="text-slate-500 text-sm mb-8">
+          ¿Estás seguro de que deseas eliminar
+          <span class="font-bold text-slate-800">{{ deleteItemDisplayName }}</span>
+          de tu perfil?
+        </p>
+        <div class="flex gap-3">
+          <button (click)="showDeleteConfirmModal.set(false)" class="cursor-pointer flex-1 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-700 font-bold text-sm hover:bg-slate-100 transition-all">Cancelar</button>
+          <button (click)="confirmDelete()" class="cursor-pointer flex-1 py-3 rounded-2xl bg-red-500 text-white font-bold text-sm hover:bg-red-600 transition-all shadow-lg shadow-red-500/25 active:scale-95">
+            Eliminar
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- ══════════════════════════════════════════════════════════════════ -->
+  <!-- MODAL: Eliminado con éxito (cierre automático 2s)                 -->
+  <!-- ══════════════════════════════════════════════════════════════════ -->
+  @if (showDeleteSuccessModal()) {
+    <div appBlockScroll class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm animate-fade-in">
+      <div class="bg-white p-8 rounded-3xl shadow-2xl max-w-sm w-full mx-4 text-center border border-slate-100 animate-slide-up relative overflow-hidden">
+        <button (click)="closeDeleteSuccess()" class="cursor-pointer absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition-colors focus:outline-none">
+          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+        <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-red-100 mb-6 shadow-inner border border-red-50">
+          <svg class="h-8 w-8 text-red-600" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+          </svg>
+        </div>
+        <h3 class="text-xl font-black text-slate-900 mb-2">¡Eliminado Correctamente!</h3>
+        <p class="text-slate-500 font-medium text-sm">
+          <span class="font-extrabold text-slate-800">{{ deleteItemDisplayName }}</span>
+          @if (selectedItemType() === 'credit')     { se ha eliminado de tus credits con éxito. }
+          @if (selectedItemType() === 'attraction') { se ha eliminado de tus atracciones con éxito. }
+          @if (selectedItemType() === 'park')       { se ha eliminado de tus parques con éxito. }
+        </p>
+        <button (click)="closeDeleteSuccess()" class="cursor-pointer mt-6 w-full rounded-2xl bg-red-600 py-3.5 text-sm font-bold text-white hover:bg-red-500 shadow-lg shadow-red-500/20 active:scale-95 transition-all focus:outline-none">Aceptar</button>
+        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-4">
+          Cerrando en {{ countdown() }}s...
+        </p>
+        <div class="absolute bottom-0 left-0 h-1 bg-red-500 animate-progress-shrink"></div>
+      </div>
+    </div>
+  }
+
+  <!-- ══════════════════════════════════════════════════════════════════ -->
+  <!-- MODAL: Cambiar Contraseña                                          -->
+  <!-- ══════════════════════════════════════════════════════════════════ -->
+  @if (showPasswordModal()) {
+    <div appBlockScroll class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/50 backdrop-blur-sm animate-fade-in px-4 py-6 overflow-y-auto">
+      <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-2xl max-w-md w-full relative animate-slide-up border border-slate-100 my-auto">
+        <button (click)="closePasswordModal()" class="cursor-pointer absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition-colors focus:outline-none p-1 rounded-lg hover:bg-slate-100">
+          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+        
+        <div class="flex items-center gap-3 mb-6">
+          <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 border border-blue-100 shadow-inner flex-shrink-0">
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-black text-slate-900 leading-tight">Seguridad de Acceso</h3>
+            <p class="text-xs text-slate-500">Crea o actualiza tu contraseña de inicio de sesión</p>
+          </div>
+        </div>
+        
+        @if (passwordError()) {
+          <div class="p-3.5 mb-5 rounded-2xl bg-red-50 border border-red-200 text-xs font-semibold text-red-700 flex items-start gap-2.5 animate-fade-in-up">
+            <svg class="w-4 h-4 shrink-0 mt-0.5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span class="leading-relaxed">{{ passwordError() }}</span>
+          </div>
+        }
+
+        <form class="space-y-4" (submit)="$event.preventDefault(); submitPasswordChange()">
+          
+          <!-- Contraseña Actual (Opcional) -->
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <label class="block text-[11px] font-bold text-slate-700 tracking-wider">CONTRASEÑA ACTUAL</label>
+              <span class="text-[10px] text-slate-400 font-medium">(Opcional para cuentas de Google)</span>
+            </div>
+            <div class="relative">
+              <input [type]="showCurrentPassword() ? 'text' : 'password'" 
+                     [ngModel]="passwordForm().currentPassword" 
+                     (ngModelChange)="passwordForm.set({...passwordForm(), currentPassword: $event})" 
+                     name="currentPassword" 
+                     autocomplete="current-password"
+                     maxlength="128"
+                     placeholder="Déjalo vacío si entraste con Google"
+                     class="text-slate-900 w-full rounded-xl border-0 py-2.5 pl-3.5 pr-10 ring-1 ring-inset ring-slate-200 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm bg-slate-50 transition-shadow">
+              <button type="button" 
+                      (click)="showCurrentPassword.set(!showCurrentPassword())" 
+                      class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-blue-600 focus:outline-none transition-colors cursor-pointer">
+                @if (showCurrentPassword()) {
+                  <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" /></svg>
+                } @else {
+                  <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 12-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                }
+              </button>
+            </div>
+          </div>
+
+          <!-- Nueva Contraseña -->
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <label class="block text-[11px] font-bold text-slate-700 tracking-wider">NUEVA CONTRASEÑA <span class="text-red-500">*</span></label>
+              @if (strengthLabel()) {
+                <span class="text-[11px] font-bold" [ngClass]="strengthColor().split(' ')[1]">{{ strengthLabel() }}</span>
+              }
+            </div>
+            <div class="relative">
+              <input [type]="showNewPassword() ? 'text' : 'password'" 
+                     [ngModel]="passwordForm().newPassword" 
+                     (ngModelChange)="passwordForm.set({...passwordForm(), newPassword: $event})" 
+                     name="newPassword" 
+                     autocomplete="new-password"
+                     maxlength="128"
+                     placeholder="Mínimo 8 caracteres"
+                     class="text-slate-900 w-full rounded-xl border-0 py-2.5 pl-3.5 pr-10 ring-1 ring-inset ring-slate-200 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm bg-slate-50 transition-shadow">
+              <button type="button" 
+                      (click)="showNewPassword.set(!showNewPassword())" 
+                      class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-blue-600 focus:outline-none transition-colors cursor-pointer">
+                @if (showNewPassword()) {
+                  <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" /></svg>
+                } @else {
+                  <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 12-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                }
+              </button>
+            </div>
+
+            <!-- Strength Meter Bar -->
+            <div class="mt-2">
+              <div class="w-full bg-slate-200 rounded-full h-1.5 overflow-hidden flex">
+                <div class="h-1.5 rounded-full transition-all duration-500 ease-out" 
+                     [ngClass]="strengthColor().split(' ')[0]" 
+                     [style.width.%]="passwordStrength()"></div>
+              </div>
+            </div>
+
+            <!-- Requirement Checklist Chips -->
+            <div class="grid grid-cols-2 gap-1.5 mt-3">
+              <div class="flex items-center gap-1.5 text-[11px] font-medium transition-colors" [class]="hasMinLength() ? 'text-emerald-600 font-bold' : 'text-slate-400'">
+                <span>{{ hasMinLength() ? '✓' : '○' }}</span>
+                <span>8+ caracteres</span>
+              </div>
+              <div class="flex items-center gap-1.5 text-[11px] font-medium transition-colors" [class]="hasUpperCase() ? 'text-emerald-600 font-bold' : 'text-slate-400'">
+                <span>{{ hasUpperCase() ? '✓' : '○' }}</span>
+                <span>1 mayúscula (A-Z)</span>
+              </div>
+              <div class="flex items-center gap-1.5 text-[11px] font-medium transition-colors" [class]="hasNumber() ? 'text-emerald-600 font-bold' : 'text-slate-400'">
+                <span>{{ hasNumber() ? '✓' : '○' }}</span>
+                <span>1 número (0-9)</span>
+              </div>
+              <div class="flex items-center gap-1.5 text-[11px] font-medium transition-colors" [class]="hasSpecialChar() ? 'text-emerald-600 font-bold' : 'text-slate-400'">
+                <span>{{ hasSpecialChar() ? '✓' : '○' }}</span>
+                <span>1 símbolo (@, #, $)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Confirmar Nueva Contraseña -->
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <label class="block text-[11px] font-bold text-slate-700 tracking-wider">CONFIRMAR CONTRASEÑA <span class="text-red-500">*</span></label>
+              @if (passwordForm().confirmPassword) {
+                <span class="text-[11px] font-bold" [class]="passwordsMatch() ? 'text-emerald-600' : 'text-red-500'">
+                  {{ passwordsMatch() ? '✓ Coinciden' : '✗ No coinciden' }}
+                </span>
+              }
+            </div>
+            <div class="relative">
+              <input [type]="showConfirmPassword() ? 'text' : 'password'" 
+                     [ngModel]="passwordForm().confirmPassword" 
+                     (ngModelChange)="passwordForm.set({...passwordForm(), confirmPassword: $event})" 
+                     name="confirmPassword" 
+                     autocomplete="new-password"
+                     maxlength="128"
+                     placeholder="Repite la nueva contraseña"
+                     class="text-slate-900 w-full rounded-xl border-0 py-2.5 pl-3.5 pr-10 ring-1 ring-inset ring-slate-200 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm bg-slate-50 transition-shadow">
+              <button type="button" 
+                      (click)="showConfirmPassword.set(!showConfirmPassword())" 
+                      class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-blue-600 focus:outline-none transition-colors cursor-pointer">
+                @if (showConfirmPassword()) {
+                  <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" /></svg>
+                } @else {
+                  <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 12-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                }
+              </button>
+            </div>
+          </div>
+          
+          <!-- Botones de Acción -->
+          <div class="pt-3 flex gap-3">
+            <button type="button" 
+                    (click)="closePasswordModal()" 
+                    class="cursor-pointer w-1/3 rounded-2xl bg-slate-100 py-3 text-sm font-bold text-slate-700 hover:bg-slate-200 active:scale-95 transition-all focus:outline-none">
+              Cancelar
+            </button>
+            <button type="submit" 
+                    [disabled]="passwordLoading() || !hasMinLength() || !passwordsMatch()" 
+                    class="cursor-pointer flex-1 rounded-2xl bg-blue-600 py-3 text-sm font-bold text-white hover:bg-blue-500 shadow-md shadow-blue-500/25 active:scale-95 transition-all focus:outline-none flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+              @if (passwordLoading()) {
+                <svg class="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
+                <span>Guardando...</span>
+              } @else {
+                <span>Guardar Contraseña</span>
+              }
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+
+  <!-- ══════════════════════════════════════════════════════════════════ -->
+  <!-- MODAL: Activar Verificación en Dos Pasos (Dual: Email u OTP App)  -->
+  <!-- ══════════════════════════════════════════════════════════════════ -->
+  @if (show2FASetupModal()) {
+    <div appBlockScroll class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/50 backdrop-blur-sm animate-fade-in px-4 py-6 overflow-y-auto">
+      <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-2xl max-w-md w-full relative animate-slide-up border border-slate-100 my-auto">
+        <button (click)="show2FASetupModal.set(false)" class="cursor-pointer absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition-colors focus:outline-none p-1 rounded-lg hover:bg-slate-100">
+          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+        
+        <div class="flex items-center gap-3 mb-5">
+          <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-100 shadow-inner flex-shrink-0">
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-black text-slate-900 leading-tight">Configurar Verificación 2FA</h3>
+            <p class="text-xs text-slate-500">Elige el método de seguridad que prefieras</p>
+          </div>
+        </div>
+
+        <!-- ── TAB / SLIDER SELECTOR ────────────────────────────────── -->
+        <div class="grid grid-cols-2 p-1 bg-slate-100 rounded-2xl mb-5">
+          <button type="button" 
+                  (click)="set2FAMethod('EMAIL')" 
+                  [class]="selected2FAType() === 'EMAIL' ? 'bg-white text-blue-600 shadow-sm font-bold' : 'text-slate-500 font-semibold hover:text-slate-800'"
+                  class="py-2.5 px-3 rounded-xl text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            <span>Por Correo</span>
+          </button>
+          <button type="button" 
+                  (click)="set2FAMethod('APP')" 
+                  [class]="selected2FAType() === 'APP' ? 'bg-white text-emerald-600 shadow-sm font-bold' : 'text-slate-500 font-semibold hover:text-slate-800'"
+                  class="py-2.5 px-3 rounded-xl text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
+            <span>App QR (TOTP)</span>
+          </button>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- OPTION 1: EMAIL OTP                                         -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        @if (selected2FAType() === 'EMAIL') {
+          <div class="space-y-4 animate-fade-in">
+            <div class="bg-blue-50/70 p-4 rounded-2xl border border-blue-100 text-center">
+              <div class="inline-flex p-2 bg-blue-100 text-blue-600 rounded-xl mb-2">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+              </div>
+              <p class="text-xs font-bold text-slate-800">Código de un solo uso por Correo</p>
+              <p class="text-[11px] text-slate-500 mt-1">
+                Al iniciar sesión te enviaremos un código de seguridad a <span class="font-bold text-slate-700">{{ userInfo().email }}</span>.
+              </p>
+            </div>
+
+            @if (!emailCodeSent()) {
+              <div class="pt-2">
+                <button type="button"
+                        (click)="sendEmail2FACode()"
+                        [disabled]="emailCodeSending()"
+                        class="cursor-pointer w-full rounded-2xl bg-blue-600 py-3.5 text-xs font-bold text-white hover:bg-blue-500 shadow-md shadow-blue-500/25 active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-50">
+                  @if (emailCodeSending()) {
+                    <svg class="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
+                    <span>Enviando código de prueba...</span>
+                  } @else {
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+                    <span>Enviar código de prueba a mi correo</span>
+                  }
+                </button>
+              </div>
+            } @else {
+              <form (submit)="$event.preventDefault(); confirm2FAEnable()" class="space-y-3">
+                <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-2xl text-center animate-fade-in">
+                  <p class="text-xs font-bold text-emerald-800">¡Código enviado con éxito!</p>
+                  <p class="text-[10px] text-emerald-600 mt-0.5">Revisa tu bandeja ({{ userInfo().email }}) e introduce los 6 dígitos:</p>
+                </div>
+
+                <!-- Spam Notice Box -->
+                <div class="p-3 bg-amber-50/90 border border-amber-200 rounded-2xl flex items-start gap-2.5 text-left text-amber-900 animate-fade-in">
+                  <span class="text-base leading-none mt-0.5 flex-shrink-0">📬</span>
+                  <p class="text-[11px] leading-tight font-medium text-amber-800">
+                    <strong class="font-bold text-amber-950">¿No lo ves en tu bandeja?</strong> Revisa tu carpeta de <strong>Spam o Correo no deseado</strong>.
+                  </p>
+                </div>
+
+                <div>
+                  <input type="text"
+                         inputmode="numeric"
+                         pattern="[0-9]*"
+                         maxlength="6"
+                         autocomplete="one-time-code"
+                         [ngModel]="twoFACodeInput()"
+                         (input)="on2FACodeInput($event)"
+                         name="twoFAEmailCode"
+                         placeholder="123456"
+                         class="text-center font-mono text-2xl font-bold tracking-[0.3em] text-slate-900 w-full rounded-2xl border-0 py-3 px-4 ring-2 ring-inset ring-slate-200 focus:ring-2 focus:ring-inset focus:ring-blue-500 bg-slate-50 transition-all">
+                </div>
+
+                @if (twoFAError()) {
+                  <div class="p-3 rounded-xl bg-red-50 border border-red-200 text-xs font-semibold text-red-700 flex items-start gap-2 animate-fade-in-up">
+                    <svg class="w-4 h-4 shrink-0 mt-0.5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <span>{{ twoFAError() }}</span>
+                  </div>
+                }
+
+                <div class="flex items-center justify-between text-[11px] pt-1">
+                  <span class="text-slate-400">¿No lo has recibido?</span>
+                  <button type="button"
+                          (click)="sendEmail2FACode()"
+                          [disabled]="emailCodeSending()"
+                          class="cursor-pointer font-bold text-blue-600 hover:text-blue-800 transition-colors disabled:opacity-50">
+                    {{ emailCodeSending() ? 'Reenviando...' : 'Reenviar código' }}
+                  </button>
+                </div>
+
+                <div class="pt-2 flex gap-3">
+                  <button type="button" 
+                          (click)="show2FASetupModal.set(false)" 
+                          class="cursor-pointer w-1/3 rounded-2xl bg-slate-100 py-3 text-sm font-bold text-slate-700 hover:bg-slate-200 active:scale-95 transition-all focus:outline-none">
+                    Cancelar
+                  </button>
+                  <button type="submit" 
+                          [disabled]="twoFALoading() || twoFACodeInput().trim().length !== 6" 
+                          class="cursor-pointer flex-1 rounded-2xl bg-blue-600 py-3 text-sm font-bold text-white hover:bg-blue-500 shadow-md shadow-blue-500/25 active:scale-95 transition-all focus:outline-none flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                    @if (twoFALoading()) {
+                      <svg class="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
+                      <span>Verificando...</span>
+                    } @else {
+                      <span>Activar 2FA por Email</span>
+                    }
+                  </button>
+                </div>
+              </form>
+            }
+          </div>
+        }
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- OPTION 2: APP QR (TOTP)                                     -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        @if (selected2FAType() === 'APP') {
+          <div class="space-y-4 animate-fade-in">
+            @if (twoFALoading() && !twoFASetupData()) {
+              <div class="py-12 flex flex-col items-center justify-center gap-3 text-slate-500">
+                <svg class="animate-spin h-8 w-8 text-emerald-600" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
+                <p class="text-xs font-semibold">Generando código QR seguro...</p>
+              </div>
+            } @else if (twoFASetupData()) {
+              <!-- Step 1: Scan QR -->
+              <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 flex flex-col items-center">
+                <p class="text-xs font-bold text-slate-700 text-center mb-3">1. Escanea el código con tu app Authenticator:</p>
+                <div class="bg-white p-2.5 rounded-2xl shadow-sm border border-slate-200">
+                  <img [src]="twoFASetupData()?.qrCode" alt="Código QR 2FA" class="w-40 h-40 object-contain rounded-xl">
+                </div>
+                
+                <!-- Manual Secret Key -->
+                <div class="mt-3 w-full text-center">
+                  <p class="text-[10px] text-slate-400 font-medium mb-1">¿No puedes escanear? Copia la clave manual:</p>
+                  <div class="flex items-center justify-between gap-2 bg-white px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-mono text-slate-700">
+                    <span class="truncate">{{ twoFASetupData()?.secret }}</span>
+                    <button type="button" 
+                            (click)="copy2FASecret()" 
+                            class="cursor-pointer text-[11px] font-bold text-emerald-600 hover:text-emerald-700 whitespace-nowrap focus:outline-none">
+                      {{ twoFACopied() ? '✓ Copiado' : 'Copiar' }}
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Step 2: Enter Code -->
+              <form (submit)="$event.preventDefault(); confirm2FAEnable()" class="space-y-3">
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 text-center mb-1.5">
+                    2. Introduce el código de 6 dígitos de tu app:
+                  </label>
+                  <input type="text"
+                         inputmode="numeric"
+                         pattern="[0-9]*"
+                         maxlength="6"
+                         autocomplete="one-time-code"
+                         [ngModel]="twoFACodeInput()"
+                         (input)="on2FACodeInput($event)"
+                         name="twoFAAppCode"
+                         placeholder="123456"
+                         class="text-center font-mono text-2xl font-bold tracking-[0.3em] text-slate-900 w-full rounded-2xl border-0 py-3 px-4 ring-2 ring-inset ring-slate-200 focus:ring-2 focus:ring-inset focus:ring-emerald-500 bg-slate-50 transition-all">
+                </div>
+
+                @if (twoFAError()) {
+                  <div class="p-3 rounded-xl bg-red-50 border border-red-200 text-xs font-semibold text-red-700 flex items-start gap-2 animate-fade-in-up">
+                    <svg class="w-4 h-4 shrink-0 mt-0.5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <span>{{ twoFAError() }}</span>
+                  </div>
+                }
+
+                <div class="pt-2 flex gap-3">
+                  <button type="button" 
+                          (click)="show2FASetupModal.set(false)" 
+                          class="cursor-pointer w-1/3 rounded-2xl bg-slate-100 py-3 text-sm font-bold text-slate-700 hover:bg-slate-200 active:scale-95 transition-all focus:outline-none">
+                    Cancelar
+                  </button>
+                  <button type="submit" 
+                          [disabled]="twoFALoading() || twoFACodeInput().trim().length !== 6" 
+                          class="cursor-pointer flex-1 rounded-2xl bg-emerald-600 py-3 text-sm font-bold text-white hover:bg-emerald-500 shadow-md shadow-emerald-500/25 active:scale-95 transition-all focus:outline-none flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                    @if (twoFALoading()) {
+                      <svg class="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
+                      <span>Verificando...</span>
+                    } @else {
+                      <span>Activar 2FA por App</span>
+                    }
+                  </button>
+                </div>
+              </form>
+            }
+          </div>
+        }
+
+      </div>
+    </div>
+  }
+
+  <!-- ══════════════════════════════════════════════════════════════════ -->
+  <!-- MODAL: Desactivar Verificación en Dos Pasos                       -->
+  <!-- ══════════════════════════════════════════════════════════════════ -->
+  @if (show2FADisableModal()) {
+    <div appBlockScroll class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/50 backdrop-blur-sm animate-fade-in px-4 py-6 overflow-y-auto">
+      <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-2xl max-w-sm w-full relative animate-slide-up border border-slate-100 my-auto">
+        <button (click)="show2FADisableModal.set(false)" class="cursor-pointer absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition-colors focus:outline-none p-1 rounded-lg hover:bg-slate-100">
+          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+        
+        <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-red-50 text-red-600 mb-4 border border-red-100 shadow-inner">
+          <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+          </svg>
+        </div>
+        
+        <h3 class="text-xl font-black text-center text-slate-900 mb-1">¿Desactivar 2FA?</h3>
+        <p class="text-xs text-center text-slate-500 mb-5">
+          Tu cuenta dejará de requerir un código adicional al iniciar sesión, reduciendo su seguridad.
+        </p>
+
+        @if (twoFAError()) {
+          <div class="p-3 mb-4 rounded-xl bg-red-50 border border-red-200 text-xs font-semibold text-red-700 flex items-start gap-2 animate-fade-in-up">
+            <svg class="w-4 h-4 shrink-0 mt-0.5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span>{{ twoFAError() }}</span>
+          </div>
+        }
+
+        <form class="space-y-4" (submit)="$event.preventDefault(); confirm2FADisable()">
+          <div>
+            <label class="block text-[11px] font-bold text-slate-700 text-center mb-1">Código de confirmación de tu app:</label>
+            <input type="text"
+                   inputmode="numeric"
+                   pattern="[0-9]*"
+                   maxlength="6"
+                   autocomplete="one-time-code"
+                   [ngModel]="twoFACodeInput()"
+                   (input)="on2FACodeInput($event)"
+                   name="disableCode"
+                   placeholder="123456"
+                   class="text-center font-mono text-xl font-bold tracking-widest text-slate-900 w-full rounded-xl border-0 py-2.5 px-3 ring-1 ring-inset ring-slate-200 focus:ring-2 focus:ring-inset focus:ring-red-500 bg-slate-50 transition-shadow">
+          </div>
+
+          <div class="flex gap-3 pt-2">
+            <button type="button" 
+                    (click)="show2FADisableModal.set(false)" 
+                    class="cursor-pointer w-1/2 rounded-2xl bg-slate-100 py-3 text-sm font-bold text-slate-700 hover:bg-slate-200 active:scale-95 transition-all focus:outline-none">
+              Cancelar
+            </button>
+            <button type="submit" 
+                    [disabled]="twoFALoading()" 
+                    class="cursor-pointer w-1/2 rounded-2xl bg-red-600 py-3 text-sm font-bold text-white hover:bg-red-500 shadow-md shadow-red-500/20 active:scale-95 transition-all focus:outline-none flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+              @if (twoFALoading()) {
+                <svg class="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
+                <span>Desactivando...</span>
+              } @else {
+                <span>Desactivar</span>
+              }
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+
+  <!-- ══════════════════════════════════════════════════════════════════ -->
+  <!-- MODAL: Editar Datos Personales                                     -->
+  <!-- ══════════════════════════════════════════════════════════════════ -->
+  @if (showEditProfileModal()) {
+    <div appBlockScroll class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm animate-fade-in px-4 py-6 overflow-y-auto">
+      <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-2xl max-w-md w-full relative animate-slide-up border border-slate-100 my-auto">
+        <button (click)="showEditProfileModal.set(false)" class="cursor-pointer absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition-colors focus:outline-none">
+          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+        
+        <h3 class="text-xl font-bold text-slate-900 mb-6">Editar Datos Personales</h3>
+        
+        @if (profileError()) {
+          <div class="p-3.5 mb-5 rounded-2xl bg-red-50 border border-red-200 text-xs font-semibold text-red-700 flex items-start gap-2.5 animate-fade-in-up">
+            <svg class="w-4 h-4 shrink-0 mt-0.5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span class="leading-relaxed">{{ profileError() }}</span>
+          </div>
+        }
+
+        <form class="space-y-4" (submit)="$event.preventDefault(); saveProfile()">
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-[11px] font-bold text-slate-700 tracking-wider mb-1">NOMBRE</label>
+              <input type="text" 
+                     [ngModel]="editForm().firstName" 
+                     (ngModelChange)="editForm.set({...editForm(), firstName: $event})" 
+                     name="firstName" 
+                     maxlength="50"
+                     autocomplete="given-name"
+                     class="text-slate-900 w-full rounded-xl border-0 py-2.5 px-3 ring-1 ring-inset ring-slate-200 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm bg-slate-50 transition-shadow">
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-slate-700 tracking-wider mb-1">APELLIDOS</label>
+              <input type="text" 
+                     [ngModel]="editForm().lastName" 
+                     (ngModelChange)="editForm.set({...editForm(), lastName: $event})" 
+                     name="lastName" 
+                     maxlength="50"
+                     autocomplete="family-name"
+                     class="text-slate-900 w-full rounded-xl border-0 py-2.5 px-3 ring-1 ring-inset ring-slate-200 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm bg-slate-50 transition-shadow">
+            </div>
+          </div>
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label class="block text-[11px] font-bold text-slate-700 tracking-wider">NOMBRE DE USUARIO</label>
+              @if (usernameStatus() === 'valid') {
+                <span class="text-[11px] font-bold text-emerald-600">✓ Disponible</span>
+              } @else if (usernameStatus() === 'invalid') {
+                <span class="text-[11px] font-bold text-red-500">✗ No disponible</span>
+              }
+            </div>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <span class="text-slate-400 font-bold">&#64;</span>
+              </div>
+              <input type="text" 
+                     [ngModel]="editForm().username" 
+                     (ngModelChange)="onUsernameChange($event)" 
+                     name="username" 
+                     maxlength="30"
+                     autocomplete="username"
+                     autocapitalize="none"
+                     spellcheck="false"
+                     [class]="usernameStatus() === 'invalid' 
+                               ? 'ring-red-300 focus:ring-red-500 bg-red-50/30' 
+                               : usernameStatus() === 'valid' 
+                                 ? 'ring-emerald-300 focus:ring-emerald-500 bg-emerald-50/20' 
+                                 : 'ring-slate-200 focus:ring-blue-600 bg-slate-50'"
+                     class="pl-8 pr-10 text-slate-900 w-full rounded-xl border-0 py-2.5 ring-1 ring-inset focus:ring-2 sm:text-sm transition-all">
+              
+              <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                @if (usernameChecking()) {
+                  <svg class="animate-spin h-4 w-4 text-blue-600" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                  </svg>
+                } @else if (usernameStatus() === 'valid') {
+                  <svg class="h-4 w-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                  </svg>
+                } @else if (usernameStatus() === 'invalid') {
+                  <svg class="h-4 w-4 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </svg>
+                }
+              </div>
+            </div>
+
+            @if (usernameError()) {
+              <div class="mt-2 p-2.5 bg-red-50 border border-red-200 rounded-xl text-xs font-semibold text-red-700 flex items-start gap-2 animate-fade-in">
+                <svg class="w-4 h-4 shrink-0 mt-0.5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <div class="flex-1">
+                  <span>{{ usernameError() }}</span>
+                  @if (usernameSuggestions().length > 0) {
+                    <p class="text-[11px] text-red-600 font-medium mt-1 mb-1.5">Sugerencias disponibles para ti:</p>
+                    <div class="flex flex-wrap gap-1.5">
+                      @for (suggestion of usernameSuggestions(); track suggestion) {
+                        <button type="button" (click)="selectSuggestion(suggestion)" class="cursor-pointer text-[11px] font-bold bg-white border border-red-200 text-red-700 px-2 py-0.5 rounded-lg hover:bg-red-100 transition-colors active:scale-95 shadow-sm">
+                          &#64;{{ suggestion }}
+                        </button>
+                      }
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+          <div class="opacity-70">
+            <label class="block text-[11px] font-bold text-slate-700 tracking-wider mb-1">CORREO ELECTRÓNICO</label>
+            <input type="email" [ngModel]="editForm().email" disabled name="email" class="cursor-not-allowed text-slate-500 w-full rounded-xl border-0 py-2.5 px-3 ring-1 ring-inset ring-slate-200 bg-slate-100 sm:text-sm mb-4">
+          </div>
+          
+          <div class="flex gap-3 pt-2">
+            <button type="button" 
+                    (click)="showEditProfileModal.set(false)" 
+                    class="cursor-pointer w-1/3 rounded-2xl bg-slate-100 py-3 text-sm font-bold text-slate-700 hover:bg-slate-200 active:scale-95 transition-all focus:outline-none">
+              Cancelar
+            </button>
+            <button type="submit" 
+                    [disabled]="profileSaving() || usernameChecking() || usernameStatus() === 'invalid'" 
+                    class="cursor-pointer flex-1 rounded-2xl bg-blue-600 py-3 text-sm font-bold text-white hover:bg-blue-500 shadow-md shadow-blue-500/20 active:scale-95 transition-all focus:outline-none flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+              @if (profileSaving()) {
+                <svg class="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                </svg>
+                <span>Guardando...</span>
+              } @else {
+                <span>Guardar Cambios</span>
+              }
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+
+  <!-- ══════════════════════════════════════════════════════════════════ -->
+  <!-- MODAL: Feedback general                                            -->
+  <!-- ══════════════════════════════════════════════════════════════════ -->
+  @if (showFeedbackModal()) {
+    <div appBlockScroll class="fixed inset-0 z-[110] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm animate-fade-in px-4">
+      <div class="bg-white p-8 rounded-3xl shadow-2xl max-w-sm w-full mx-auto text-center border border-slate-100 animate-slide-up relative">
+        <button (click)="showFeedbackModal.set(false)" class="cursor-pointer absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition-colors focus:outline-none">
+          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+        
+        @if (feedbackContent().type === 'success') {
+          <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 mb-6 shadow-inner border border-emerald-50">
+            <svg class="h-8 w-8 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
+          </div>
+        } @else {
+          <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-blue-100 mb-6 shadow-inner border border-blue-50">
+            <svg class="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg>
+          </div>
+        }
+        
+        <h3 class="text-xl font-black text-slate-900 mb-2">{{ feedbackContent().title }}</h3>
+        <p class="text-slate-500 font-medium mb-8">{{ feedbackContent().message }}</p>
+        
+        @if (feedbackContent().type === 'success') {
+          <button (click)="showFeedbackModal.set(false)" class="cursor-pointer mt-4 w-full rounded-2xl bg-emerald-600 py-3.5 text-sm font-bold text-white hover:bg-emerald-500 shadow-lg shadow-emerald-500/20 active:scale-95 transition-all focus:outline-none">Entendido</button>
+        } @else {
+          <button (click)="showFeedbackModal.set(false)" class="cursor-pointer mt-4 w-full rounded-2xl bg-blue-600 py-3.5 text-sm font-bold text-white hover:bg-blue-500 shadow-lg shadow-blue-500/20 active:scale-95 transition-all focus:outline-none">Entendido</button>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- ══════════════════════════════════════════════════════════════════ -->
+  <!-- MODAL: Añadir Amigo                                                -->
+  <!-- ══════════════════════════════════════════════════════════════════ -->
+  @if (showAddFriendModal()) {
+    <div appBlockScroll class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm animate-fade-in px-4 py-6 overflow-y-auto">
+      <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-2xl max-w-md w-full relative animate-slide-up border border-slate-100 min-h-[350px] max-h-[85dvh] flex flex-col my-auto">
+        <button (click)="showAddFriendModal.set(false)" class="cursor-pointer absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition-colors focus:outline-none">
+          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+        
+        <h3 class="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+          <span>🔍</span> Buscar Amigos
+        </h3>
+        
+        <div class="relative mb-6">
+          <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+            <svg class="w-5 h-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          </div>
+          <input type="text" 
+                 [ngModel]="searchUserQuery()" 
+                 (ngModelChange)="onFriendSearchChange($event)" 
+                 placeholder="Busca por nombre de usuario..." 
+                 maxlength="50"
+                 class="pl-11 text-slate-900 w-full rounded-2xl border-0 py-3.5 px-4 ring-1 ring-inset ring-slate-200 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm bg-slate-50 transition-shadow">
+        </div>
+
+        <div class="flex-1 overflow-y-auto pr-2 space-y-3">
+          @if (searchUserQuery().length > 1 && suggestedUsers().length === 0) {
+            <div class="text-center mt-10">
+              <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 mb-3">
+                <svg class="h-6 w-6 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+              </div>
+              <p class="text-slate-500 font-medium text-sm">No se encontraron usuarios.</p>
+            </div>
+          } @else if (searchUserQuery().length <= 1) {
+            <p class="text-center text-slate-400 font-medium text-sm mt-10">Escribe al menos 2 letras para buscar.</p>
+          } @else {
+            @for (user of suggestedUsers(); track user.id) {
+              <div class="flex items-center justify-between p-3 bg-white border border-slate-100 rounded-2xl hover:bg-slate-50 transition-all shadow-sm">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-black shadow-inner">
+                    {{ user.username.charAt(0).toUpperCase() }}
+                  </div>
+                  <span class="font-bold text-slate-900 text-sm">&#64;{{ user.username }}</span>
+                </div>
+                <button (click)="sendFriendRequest(user)" class="cursor-pointer bg-blue-600 text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-blue-500 shadow-md shadow-blue-500/20 active:scale-95 transition-all">
+                  Añadir
+                </button>
+              </div>
+            }
+          }
+        </div>
+      </div>
+    </div>
+  }
+
+</main>

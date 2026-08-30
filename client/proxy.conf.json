@@ -1,0 +1,8 @@
+{
+  "/queue-times-api": {
+    "target": "https://queue-times.com",
+    "changeOrigin": true,
+    "pathRewrite": { "^/queue-times-api": "" },
+    "secure": true
+  }
+}
