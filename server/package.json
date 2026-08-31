@@ -8,8 +8,8 @@
     "build": "prisma generate",
     "start": "tsx src/index.ts",
     "postinstall": "prisma generate",
-    "prisma:generate": "npx prisma generate",
-    "prisma:push": "npx prisma db push"
+    "prisma:generate": "prisma generate",
+    "prisma:push": "prisma db push"
   },
   "keywords": [],
   "author": "",

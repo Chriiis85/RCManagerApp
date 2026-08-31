@@ -1,0 +1,14 @@
+{
+  "buildCommand": "npm run build:client",
+  "outputDirectory": "client/dist/RCManager/browser",
+  "rewrites": [
+    {
+      "source": "/queue-times-api/(.*)",
+      "destination": "/api/proxy?path=$1"
+    },
+    {
+      "source": "/((?!api/).*)",
+      "destination": "/index.html"
+    }
+  ]
+}
