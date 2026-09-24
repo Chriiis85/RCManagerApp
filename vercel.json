@@ -1,6 +1,8 @@
 {
-  "buildCommand": "npm run build:client",
-  "outputDirectory": "client/dist/RCManager",
+  "framework": null,
+  "installCommand": "npm install",
+  "buildCommand": "cd client && npx ng build --configuration=production",
+  "outputDirectory": "client/dist/RCManager/browser",
   "rewrites": [
     {
       "source": "/queue-times-api/(.*)",
